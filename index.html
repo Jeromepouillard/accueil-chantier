@@ -2,49 +2,82 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="robots" content="noindex">
-  <title>Accueil Chantier</title>
+  <title>Accueil Chantier – PR Desjardins</title>
   <style>
+    :root { --brand:#000; --accent:#0078d4; --accent-hover:#005a9e; }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
     body {
-      font-family: sans-serif;
-      padding: 2em;
-      background-color: #f4f4f4;
-      color: #333;
-      max-width: 700px;
-      margin: auto;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--brand);
+      background: #fff url("assets/bg-honeycomb.png") center/340px repeat;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      display: flex; align-items: center; justify-content: center;
+      padding: 24px;
     }
-    h1 {
-      color: #bb0000;
+    .card {
+      width: 100%;
+      max-width: 720px;
+      background: rgba(255,255,255,0.9);
+      backdrop-filter: saturate(120%) blur(2px);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.08);
     }
-    a.bouton {
-      display: inline-block;
-      margin: 10px 0;
-      padding: 12px 20px;
-      background-color: #0078d4;
-      color: white;
-      text-decoration: none;
-      border-radius: 5px;
+    header { display:flex; align-items:center; gap:16px; margin-bottom: 8px; }
+    header img { height: 38px; width: auto; }
+    h1 { font-size: clamp(22px, 4.5vw, 28px); margin: 8px 0 12px; }
+    p.lead { margin: 0 0 16px; line-height: 1.4; }
+    ol { margin: 10px 0 22px; padding-left: 18px; }
+    .btn {
+      display:block; width:100%;
+      padding: 14px 18px; margin: 10px 0;
+      text-align:center; text-decoration:none; font-weight:600;
+      border-radius: 10px;
+      background: var(--accent); color: #fff;
     }
-    a.bouton:hover {
-      background-color: #005a9e;
+    .btn:hover { background: var(--accent-hover); }
+    .subtle { font-size: 13px; opacity:.8; margin-top: 4px; }
+    .note {
+      background: #fff3cd; border:1px solid #ffe08a; color:#614400;
+      padding:10px 12px; border-radius:10px; font-size:14px; margin-top:14px;
     }
   </style>
 </head>
 <body>
-  <h1>Accueil Chantier – PR Desjardins</h1>
-  <p>
-    Bienvenue sur le portail d’accueil des intervenants externes.<br>
-    Merci de compléter cette procédure avant d’entrer sur le chantier.
-  </p>
+  <main class="card">
+    <header>
+      <img src="assets/logo-prdesjardins.png" alt="P+R Desjardins">
+      <div>
+        <h1>Accueil Chantier – Formulaire de présence</h1>
+        <div class="subtle">Merci de compléter cette procédure avant d’entrer sur le chantier.</div>
+      </div>
+    </header>
 
-  <ol>
-    <li>📥 <strong>Téléchargez le formulaire PDF</strong></li>
-    <li>✍️ Remplissez-le sur votre appareil</li>
-    <li>📤 <strong>Soumettez-le via le formulaire en ligne</strong></li>
-  </ol>
+    <p class="lead">Étapes ultra simples :</p>
+    <ol>
+      <li>📥 Téléchargez le formulaire PDF</li>
+      <li>✍️ Remplissez-le sur votre téléphone</li>
+      <li>📤 Appuyez sur <strong>ENVOYER</strong> dans le PDF</li>
+    </ol>
 
-  <a href="https://prdesjardins-my.sharepoint.com/:b:/g/personal/jpouillard_ateliermmr_com/EW7wPaFAZRZGibccXFX9LsYBKoeReu5l-CMMD-T3Xu1YWw?e=S4fUCG" class="bouton" target="_blank">📄 Télécharger le PDF</a><br>
-  <a href="LIEN_VERS_MICROSOFT_FORMS" class="bouton" target="_blank">📤 Soumettre le PDF rempli</a>
+    <!-- Boutons -->
+    <a class="btn" href="https://prdesjardins-my.sharepoint.com/:b:/g/personal/jpouillard_ateliermmr_com/EW7wPaFAZRZGibccXFX9LsYBKoeReu5l-CMMD-T3Xu1YWw?e=S4fUCG" target="_blank" rel="noopener">
+      📄 Télécharger le PDF
+    </a>
+
+    <!-- Mets le vrai lien Forms ici quand l’admin l’autorise -->
+    <a class="btn" href="LIEN_VERS_MICROSOFT_FORMS" target="_blank" rel="noopener">
+      📤 Soumettre le PDF rempli (option B)
+    </a>
+
+    <div class="note">
+      ⚠️ Si le bouton <strong>ENVOYER</strong> ne s’ouvre pas : ouvrir le PDF avec l’app <strong>Adobe Acrobat Reader</strong> (gratuite), puis réessayer.
+    </div>
+  </main>
 </body>
 </html>
+
