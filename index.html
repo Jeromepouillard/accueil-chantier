@@ -32,14 +32,19 @@
     h1 { font-size: clamp(22px, 4.5vw, 28px); margin: 8px 0 12px; }
     p.lead { margin: 0 0 16px; line-height: 1.4; }
     ol { margin: 10px 0 22px; padding-left: 18px; }
-    .btn {
+    .btn{
       display:block; width:100%;
-      padding: 14px 18px; margin: 10px 0;
+      padding:14px 18px; margin:10px 0;
       text-align:center; text-decoration:none; font-weight:600;
-      border-radius: 10px;
-      background: var(--accent); color: #fff;
+      color:#111; background:#F2F4F7;           /* gris pâle */
+      border:1px solid #E5E7EB;                 /* liseré propre */
+      border-radius:8px;                         /* arrondi + discret */
+      box-shadow:0 1px 2px rgba(0,0,0,.04);      /* très léger relief */
+      transition:background .15s ease, border-color .15s ease, transform .02s;
     }
-    .btn:hover { background: var(--accent-hover); }
+    .btn:hover{ background:#E9EDF3; border-color:#D8DDE5; }
+    .btn:active{ transform:translateY(1px); }
+    .btn:focus-visible{ outline:2px solid #111; outline-offset:2px; }
     .subtle { font-size: 13px; opacity:.8; margin-top: 4px; }
     .note {
       background: #fff3cd; border:1px solid #ffe08a; color:#614400;
@@ -59,11 +64,11 @@
 
     <p class="lead">Étapes ultra simples :</p>
     <ol>
-      <li>📥 Téléchargez le formulaire PDF</li>
-      <li>✍️ Remplissez-le sur votre téléphone</li>
-      <li>📤 Appuyez sur <strong>ENVOYER</strong> dans le PDF</li>
+      <li> Téléchargez le formulaire PDF</li>
+      <li> Remplissez-le sur votre téléphone</li>
+      <li> Appuyez sur <strong>ENVOYER</strong> dans le PDF</li>
     </ol>
-    <!-- Boutons -->
+    <!-- Bouton -->
     <a class="btn" href="https://prdesjardins-my.sharepoint.com/:b:/g/personal/jpouillard_ateliermmr_com/EW7wPaFAZRZGibccXFX9LsYBKoeReu5l-CMMD-T3Xu1YWw?e=S4fUCG" target="_blank" rel="noopener">
       📄 Télécharger et envoyer le PDF
     </a>
