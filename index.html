@@ -28,7 +28,12 @@
       box-shadow: 0 8px 32px rgba(0,0,0,0.08);
     }
     header { display:flex; align-items:center; gap:16px; margin-bottom: 8px; }
-    header img { height: 38px; width: auto; }
+    header img {
+      max-height: 40px;      /* taille max */
+      max-width: 100%;       /* jamais dépasser la largeur dispo */
+      height: auto;          /* garder les proportions */
+      width: auto;
+    }
     h1 { font-size: clamp(22px, 4.5vw, 28px); margin: 8px 0 12px; }
     p.lead { margin: 0 0 16px; line-height: 1.4; }
     ol { margin: 10px 0 22px; padding-left: 18px; }
