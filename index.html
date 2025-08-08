@@ -6,7 +6,7 @@
   <meta name="robots" content="noindex">
   <title>Accueil Chantier – PR Desjardins</title>
   <style>
-    :root { --brand:#000; --accent:#0078d4; --accent-hover:#005a9e; }
+    :root { --brand:#000; --accent:#F2F4F7; --accent-hover:#E9EDF3; }
     * { box-sizing: border-box; }
     html, body { height: 100%; margin: 0; }
     body {
@@ -28,17 +28,7 @@
       box-shadow: 0 8px 32px rgba(0,0,0,0.08);
     }
     header { display:flex; align-items:center; gap:16px; margin-bottom: 8px; }
-    header img {
-      max-height: 40px;      /* taille max */
-      max-width: 100%;       /* jamais dépasser la largeur dispo */
-      height: auto;          /* garder les proportions */
-      width: auto;
-    }
-    @media (max-width: 480px) {
-      header img {
-        max-height: 32px;
-      }
-    }
+    header img { height: 38px; width: auto; }
     h1 { font-size: clamp(22px, 4.5vw, 28px); margin: 8px 0 12px; }
     p.lead { margin: 0 0 16px; line-height: 1.4; }
     ol { margin: 10px 0 22px; padding-left: 18px; }
@@ -48,7 +38,7 @@
       text-align:center; text-decoration:none; font-weight:600;
       color:#111; background:#F2F4F7;           /* gris pâle */
       border:1px solid #E5E7EB;                 /* liseré propre */
-      border-radius:8px;                         /* arrondi + discret */
+      border-radius:8px;                         /* arrondi discret */
       box-shadow:0 1px 2px rgba(0,0,0,.04);      /* très léger relief */
       transition:background .15s ease, border-color .15s ease, transform .02s;
     }
@@ -74,30 +64,29 @@
 
     <p class="lead">Étapes ultra simples :</p>
     <ol>
-      <li> Téléchargez le formulaire PDF</li>
-      <li> Remplissez-le sur votre téléphone</li>
-      <li> Appuyez sur <strong>ENVOYER</strong> dans le PDF</li>
+      <li>📥 Téléchargez le formulaire PDF</li>
+      <li>✍️ Ouvrez-le dans l’app Adobe Acrobat</li>
+      <li>📤 Appuyez sur <strong>ENVOYER</strong> dans le PDF</li>
     </ol>
-    <!-- Bouton -->
-    <a class="btn" href="assets/Accueil-Travailleurs.pdf" download="Accueil-Chantier.pdf" rel="noopener">
-  📄 Télécharger le PDF
-</a>
+
+    <!-- Téléchargement direct du PDF (évite la visionneuse du navigateur) -->
+    <a class="btn" href="assets/Accueil-Travailleurs.pdf" download>
       📄 Télécharger et envoyer le PDF
     </a>
-    <div class="note">
-      ⚠️ Si le bouton <strong>ENVOYER</strong> ne s’ouvre pas : ouvrir le PDF avec l’app <strong>Adobe Acrobat Reader</strong> (gratuite), puis réessayer.
-    </div>
-    <div class="note">
-      <strong>Après le téléchargement :</strong><br>
-      iPhone → Ouvrir l’app <strong>Fichiers</strong> ▸ appuyez sur le PDF ▸ <strong>Partager</strong> ▸ <strong>Ouvrir dans Adobe Acrobat</strong><br>
-      Android → Ouvrir le dossier <strong>Téléchargements</strong> ▸ touchez le PDF ▸ <strong>Ouvrir avec Adobe Acrobat</strong>
-    </div>
+
+    <!-- Liens pour ouvrir/installer Acrobat sur mobile -->
     <a class="btn" href="https://apps.apple.com/app/adobe-acrobat-reader-pdf/id469337564" target="_blank" rel="noopener">
-       Installer Adobe Acrobat (iPhone)
+      🍎 iPhone/iPad – Ouvrir dans Adobe Acrobat
     </a>
     <a class="btn" href="https://play.google.com/store/apps/details?id=com.adobe.reader" target="_blank" rel="noopener">
-     Installer Adobe Acrobat (Android)
+      🤖 Android – Ouvrir dans Adobe Acrobat
     </a>
+
+    <div class="note">
+      📱 <strong>iPhone :</strong> après “Télécharger”, touchez <em>Partager</em> (carré + flèche),
+      puis <strong>“Ouvrir dans Acrobat”</strong> (ou “Enregistrer dans Fichiers” → ouvrir avec Acrobat).<br>
+      📱 <strong>Android :</strong> après “Télécharger”, choisissez <strong>“Ouvrir avec Adobe Acrobat”</strong>.
+    </div>
   </main>
 </body>
 </html>
