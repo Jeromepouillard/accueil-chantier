@@ -319,12 +319,12 @@
             echeanceCCQ: ["Échéance Carte CCQ","Echeance Carte CCQ","Échéance carte CCQ"],
 
             // Coordonnées du travailleur
-            nomTravailleur: ["NomTravailleur","Travailleur Prénom et Nom en lettres moulées","Prénom et Nom"],
+            nomTravailleur: ["NomTravailleur"],
             entreprise: ["Entreprise"],
             tel1: ["Téléphone","Telephone"],
             tel2: ["Téléphone_2","Telephone_2"],
             tel3: ["Téléphone_3","Telephone_3"],
-            contactUrgence: ["Contact durgence","Contact d'urgence","Contact urgence"],
+            contactUrgence: ["Contact durgence"],
 
             // Choix Oui/Non (stockés en texte dans le PDF original)
             rss: ["Rss"],
@@ -353,12 +353,12 @@
             EPI: ["EPI"],
 
             // Engagement du travailleur (case à cocher)
-            Engagement: ["Case à cocher24","ENGAGEMENT DU TRAVAILLEUR","Engagement"],
+            Engagement: ["Case à cocher24"],
 
             // Nouveaux champs pour le bas du formulaire (Travailleur Nom Final, Date Finale)
             // Signature ne sera PAS un champ de formulaire PDF mais une image ajoutée.
-            travailleurNomFinal: ["Travailleur: (Prénom et Nom en lettres moulées)","Nom et Prénom","Nom Prenom"], // Ajouté pour le champ de texte
-            dateFinale: ["Date Finale", "Date"] // Ajouté pour la date du bas
+            travailleurNomFinal: ["Travailleur Prénom et Nom en lettres moulées"], // Ajouté pour le champ de texte
+            dateFinale: ["Date27_es_:signer:date", "Date"] // Ajouté pour la date du bas
             // RETIRÉ: signature: ["Signature26_es_:signer:signature:"] car ce n'est pas un champ de formulaire PDF.
         };
 
@@ -597,9 +597,9 @@
                 // Si votre PDF a des marges ou est plus complexe, il faudra tester et ajuster.
                 // Exemple : si votre champ a Y = 50mm du haut et hauteur 20mm,
                 // alors sa position Y dans pdf-lib serait `lastPage.getHeight() - 50 - 20`.
-                const signatureX = 50;  // Position X en mm (à partir du bord gauche du PDF)
-                const signatureY = 50; // Position Y en mm (à partir du bord bas du PDF)
-                const signatureWidth = 100; // Largeur de l'image de signature en mm
+                const signatureX = 90 * 2.835;  // Position X en mm (à partir du bord gauche du PDF)
+                const signatureY = 38 * 2.835; // Position Y en mm (à partir du bord bas du PDF)
+                const signatureWidth = 55; // Largeur de l'image de signature en mm
                 const signatureHeight = signatureImage.height * signatureWidth / signatureImage.width; // Maintient les proportions
 
                 lastPage.drawImage(signatureImage, {
