@@ -17,7 +17,6 @@
             font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
             color: var(--brand);
             background: #fff url("assets/bg-honeycomb.png") center/340px repeat;
-            /* Retire le flexbox du body pour permettre un défilement naturel */
             padding: 24px; /* Ajoute un espacement autour de la carte */
             overflow-y: auto; /* Permet le défilement vertical si le contenu dépasse */
             display: block; /* S'assure que le corps se comporte comme un bloc */
@@ -31,11 +30,17 @@
             border-radius: 16px;
             padding: 24px;
             box-shadow: 0 8px 32px rgba(0,0,0,0.08);
-            /* Ajout d'une marge automatique pour centrer la carte sans utiliser flex sur body */
-            margin: 0 auto;
+            margin: 0 auto; /* Centre la carte horizontalement */
         }
         /* Styles pour l'en-tête (logo et titre) */
-        header { display:flex; align-items:center; gap:16px; margin-bottom: 8px; }
+        header { 
+            display: flex; 
+            flex-direction: column; /* Empile les éléments (logo et div de texte) verticalement */
+            align-items: center; /* Centre les éléments horizontalement dans l'en-tête */
+            gap: 8px; /* Réduit l'espace entre le logo et le texte */
+            margin-bottom: 8px; 
+            text-align: center; /* Centre le texte à l'intérieur du div si nécessaire */
+        }
         header img {
             max-height: 40px; /* Taille maximale du logo */
             max-width: 100%; /* S'assure que le logo ne dépasse pas la largeur disponible */
@@ -92,7 +97,6 @@
             © P+R Desjardins. Tous droits réservés.
         </p>
     </main>
-    <!-- Le script pour le bouton d'envoi n'est plus nécessaire ici car l'envoi se fait depuis 'formulaire.html' -->
 </body>
 </html>
 
