@@ -6,18 +6,23 @@
     <meta name="robots" content="noindex">
     <title>Accueil Chantier – PR Desjardins</title>
     <style>
+        /* Variables CSS pour les couleurs */
         :root { --brand:#000; --accent:#0078d4; --accent-hover:#005a9e; }
+        /* Réinitialisation de base pour tous les éléments */
         * { box-sizing: border-box; }
-        html, body { height: 100%; margin: 0; }
+        html { height: 100%; } /* S'assure que la racine HTML prend toute la hauteur */
         body {
+            min-height: 100vh; /* S'assure que le corps prend au moins toute la hauteur du viewport */
+            margin: 0;
             font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
             color: var(--brand);
             background: #fff url("assets/bg-honeycomb.png") center/340px repeat;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            display: flex; align-items: center; justify-content: center;
-            padding: 24px;
+            /* Retire le flexbox du body pour permettre un défilement naturel */
+            padding: 24px; /* Ajoute un espacement autour de la carte */
+            overflow-y: auto; /* Permet le défilement vertical si le contenu dépasse */
+            display: block; /* S'assure que le corps se comporte comme un bloc */
         }
+        /* Styles de la carte principale qui contient le contenu */
         .card {
             width: 100%;
             max-width: 720px;
@@ -26,21 +31,28 @@
             border-radius: 16px;
             padding: 24px;
             box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+            /* Ajout d'une marge automatique pour centrer la carte sans utiliser flex sur body */
+            margin: 0 auto;
         }
+        /* Styles pour l'en-tête (logo et titre) */
         header { display:flex; align-items:center; gap:16px; margin-bottom: 8px; }
         header img {
-            max-height: 40px;
-            max-width: 100%;
-            height: auto;
+            max-height: 40px; /* Taille maximale du logo */
+            max-width: 100%; /* S'assure que le logo ne dépasse pas la largeur disponible */
+            height: auto; /* Maintient les proportions */
             width: auto;
         }
+        /* Adaptations pour les écrans plus petits (mobile) */
         @media (max-width: 480px) {
             header img {
-                max-height: 32px;
+                max-height: 32px; /* Réduit la taille du logo sur les petits écrans */
             }
         }
+        /* Styles des titres principaux */
         h1 { font-size: clamp(22px, 4.5vw, 28px); margin: 8px 0 12px; }
+        /* Styles du paragraphe d'introduction */
         p.lead { margin: 0 0 16px; line-height: 1.4; }
+        /* Styles des boutons */
         .btn{
             display:block; width:100%;
             padding:14px 18px; margin:10px 0;
@@ -54,6 +66,7 @@
         .btn:hover{ background:#E9EDF3; border-color:#D8DDE5; }
         .btn:active{ transform:translateY(1px); }
         .btn:focus-visible{ outline:2px solid #111; outline-offset:2px; }
+        /* Styles du texte subtil ou des petites informations */
         .subtle { font-size: 13px; opacity:.8; margin-top: 4px; }
     </style>
 </head>
@@ -79,8 +92,7 @@
             © P+R Desjardins. Tous droits réservés.
         </p>
     </main>
+    <!-- Le script pour le bouton d'envoi n'est plus nécessaire ici car l'envoi se fait depuis 'formulaire.html' -->
 </body>
 </html>
-</html>
-
 
