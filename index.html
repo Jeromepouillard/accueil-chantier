@@ -67,61 +67,20 @@
             </div>
         </header>
 
-        <p class="lead">Commencez par remplir le formulaire de présence en ligne.</p>
+        <p class="lead">Commencez par remplir le formulaire en ligne.</p>
 
         <a class="btn" href="formulaire.html">
             ✍️ Remplir le formulaire
         </a>
 
-        <p class="lead" style="margin-top: 24px;">Si vous avez déjà rempli le formulaire et généré le PDF, vous pouvez l'envoyer par e-mail ci-dessous.</p>
-        <a class="btn" id="send-btn" href="#">
-            ✉️ Envoyer le formulaire par e-mail
-        </a>
+        <p class="lead" style="margin-top: 24px;">Après avoir généré votre PDF, vous pouvez le télécharger ou le partager directement depuis la page du formulaire.</p>
 
         <p class="subtle" style="text-align: center; margin-top: 24px;">
             © P+R Desjardins. Tous droits réservés.
         </p>
     </main>
-    <script>
-        const sendBtn = document.getElementById('send-btn');
-        const storedPdf = localStorage.getItem('generatedPdf');
-
-        if (storedPdf) {
-            // Si un PDF est présent dans le localStorage, le bouton est actif
-            sendBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                const to = 'votre.email@exemple.com'; // REMPLACEZ CETTE ADRESSE PAR LA VÔTRE
-                const subject = 'Formulaire de chantier rempli';
-                const body = 'Bonjour,\n\nVeuillez trouver ci-joint le formulaire de présence de chantier que j\'ai rempli.';
-
-                // Tente d'ouvrir le client de messagerie.
-                // NOTE IMPORTANTE: L'ajout de pièces jointes via mailto est très limité
-                // et ne fonctionne pas de manière fiable sur tous les navigateurs ou appareils mobiles
-                // pour des raisons de sécurité.
-                // L'utilisateur pourrait devoir attacher le fichier manuellement si le client mail s'ouvre sans.
-                window.location.href = `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-                
-                // Optionnel: Nettoyer le PDF du localStorage après que l'utilisateur a cliqué sur envoyer.
-                // Cela empêche le bouton de rester actif indéfiniment.
-                localStorage.removeItem('generatedPdf');
-            });
-
-            // Change l'apparence du bouton pour indiquer qu'il est actif
-            sendBtn.style.background = 'var(--accent)';
-            sendBtn.style.color = '#fff';
-            sendBtn.style.borderColor = 'var(--accent)';
-            sendBtn.textContent = '✉️ Envoyer le formulaire par e-mail (PDF prêt)';
-        } else {
-            // Le bouton est inactif si aucun PDF n'est présent dans le localStorage
-            sendBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                alert('Veuillez d\'abord remplir le formulaire sur la page dédiée et générer le PDF.');
-            });
-            sendBtn.style.opacity = 0.6; // Rend le bouton semi-transparent
-            sendBtn.style.cursor = 'not-allowed'; // Change le curseur pour indiquer qu'il est inactif
-        }
-    </script>
 </body>
+</html>
 </html>
 
 
