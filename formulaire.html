@@ -162,23 +162,28 @@
     try { checked ? f.check?.() : f.uncheck?.(); } catch(e) { /* silencieux */ }
   }
 
-  // ===== Mapping des champs (basé sur l'extraction fournie) =====
-  // Ajoute des alias si nécessaire (ex: apostrophes, accents, variantes)
+  // ===== Mapping des champs (exactement selon ton PDF) =====
   const map = {
+    // En‑tête
     nomProjet: ["NomProjet","Nom du projet","Nom Projet"],
     numProjet: ["Num Projet","# Projet","NumProjet"],
     metierCCQ: ["Métier CCQ","Metier CCQ"],
     echeanceCCQ: ["Échéance Carte CCQ","Echéance Carte CCQ","Échéance carte CCQ"],
+
+    // Coordonnées
     nomTravailleur: ["NomTravailleur","Travailleur  Prénom et Nom en lettres moulées","Prénom et Nom"],
     entreprise: ["Entreprise"],
     tel1: ["Téléphone","Telephone"],
     tel2: ["Téléphone_2","Telephone_2"],
     tel3: ["Téléphone_3","Telephone_3"],
     contactUrgence: ["Contact durgence","Contact d'urgence","Contact urgence"],
-    rss: ["Rss"],
-    santePb: ["sante_pb"],
 
-    // Formations
+    // Choix Oui/Non stockés en texte dans le PDF
+    rss: ["Rss"],            // valeurs attendues: "Oui" / "Non"
+    sante_pb: ["sante_pb"],  // valeurs attendues: "Oui" / "Non"
+    sante_details: ["Santé_es_:sender:", "SANTÉ", "Sante_details", "Santé - précisez"],
+
+    // Formations (cases à cocher)
     Cadenassage: ["Cadenassage"],
     Amiante: ["Amiante","Amiante /silice","Amiante / silice"],
     EspaceClos: ["Espace clos"],
@@ -189,20 +194,23 @@
     Plateforme: ["Plateforme élévatrice"],
     Autres: ["Autres"],
 
-    // Sujets traités
+    // Sujets traités (cases à cocher)
     RisquesGeneraux: ["Risque généraux","Risques généraux"],
     RisquesSpecifiques: ["Risques spécifique","Risques spécifiques au chantier"],
     Evacuation: ["Procédure d'évacuation","Procédure d'évacuation / Rassemblement"],
     Accident: ["Procédure en cas d'accident","Prodécure en cas d'accident (trousses, déclaration événement accidentel, formulaire assignation temporaire)"],
     Politiques: ["Politiques drogues et alcools","Politiques alcool, drogues, harcèlement et violence"],
-    ToleranceZero: ["Tolérence zéro","Tolérance Zéro"],
+    ToleranceZero: ["Tolérence zéro","Tolérances Zéro","Tolérance Zéro"],
     DroitsObligations: ["Droits et obligations"],
     EPI: ["EPI"],
 
-    // Signatures/Dates (si présents)
+    // Engagement du travailleur (case à cocher)
+    Engagement: ["Case à cocher24","ENGAGEMENT DU TRAVAILLEUR","Engagement"],
+
+    // Signature / dates
+    signature: ["Signature26_es_:signer:signature:"],
     date1: ["Date27_es_:signer:date:","Date"],
-    date2: ["Date29_es_:signer:date:"],
-    signature: ["Signature26_es_:signer:signature:"]
+    date2: ["Date29_es_:signer:date:"]
   };
 
   async function loadTemplate() {
@@ -287,11 +295,10 @@
     setText(form, map.tel3, v.tel3);
     setText(form, map.contactUrgence, v.contactUrgence);
 
-    // RSS / Santé (beaucoup de formulaires utilisent des cases distinctes Oui/Non ; ici on active juste un flag générique si dispo)
-    setCheck(form, map.rss, v.rss);
-    setCheck(form, map.santePb, v.santePb);
-    // Zone détails santé : si le template a un champ texte dédié, ajoute son nom ici si différent
-    setText(form, ["Santé_es_:sender:", "SANTÉ", "Sante_details", "Santé - précisez"], v.santeDetails);
+    // RSS / Santé : ces champs sont textuels dans ton PDF ("Oui"/"Non")
+    setText(form, map.rss, v.rss ? 'Oui' : 'Non');
+    setText(form, map.sante_pb, v.santePb ? 'Oui' : 'Non');
+    setText(form, map.sante_details, v.santeDetails);
 
     // Formations
     for (const key of Object.keys(v.formations)) {
@@ -304,7 +311,7 @@
     }
 
     // Engagement (si champ existe)
-    setCheck(form, ["ENGAGEMENT DU TRAVAILLEUR","Engagement"], v.engagement);
+    setCheck(form, map.Engagement, v.engagement);
 
     // Dates signature (met la date du jour si champs trouvés)
     const today = new Date();
