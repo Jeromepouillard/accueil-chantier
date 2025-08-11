@@ -13,9 +13,10 @@
             min-height:100vh; /* S'assurer que body prend au moins toute la hauteur du viewport */
             margin:0;
             font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-            background:#fff;
-            padding:24px; /* Garder le padding autour de la carte */
             color:var(--brand);
+            /* Ajout du fond nid d'abeille ici */
+            background: #fff url("assets/bg-honeycomb.png") center/340px repeat;
+            padding:24px; /* Garder le padding autour de la carte */
             overflow-y: auto; /* Permettre le défilement vertical si le contenu dépasse */
             display: block; /* Assurer que body se comporte comme un bloc */
         }
@@ -24,7 +25,9 @@
         .card{
             width:100%;
             max-width:900px;
-            background:#fff;
+            /* La carte doit être légèrement transparente pour voir l'arrière-plan */
+            background: rgba(255,255,255,0.9); 
+            backdrop-filter: saturate(120%) blur(2px); /* Effet de flou pour le fond */
             border:1px solid var(--muted);
             border-radius:16px;
             padding:24px;
@@ -251,7 +254,7 @@
             // REMARQUE: "# Projet" est maintenant séparé de "# ACCUEIL"
             numProjet: ["Num Projet","# Projet","NumProjet"], 
             metierCCQ: ["Métier CCQ","Metier CCQ"],
-            echeanceCCQ: ["Échéance Carte CCQ","Echéance Carte CCQ","Échéance carte CCQ"],
+            echeanceCCQ: ["Échéance Carte CCQ","Echeance Carte CCQ","Échéance carte CCQ"],
 
             // Coordonnées du travailleur
             nomTravailleur: ["NomTravailleur","Travailleur Prénom et Nom en lettres moulées","Prénom et Nom"],
