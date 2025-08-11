@@ -43,7 +43,20 @@
             margin-bottom: 12px; 
             text-align: center; /* Centre le texte à l'intérieur du div si nécessaire */
         }
-        header img{height:40px} /* Hauteur fixe pour le logo */
+        header img {
+            /* Rendre le logo responsive */
+            max-height: 40px; /* Hauteur maximale par défaut */
+            max-width: 100%; /* S'assure que le logo ne dépasse pas la largeur du conteneur */
+            height: auto; /* Maintient les proportions */
+            width: auto; /* La largeur s'adapte automatiquement */
+        }
+        /* Media query pour les petits écrans (téléphones) */
+        @media (max-width: 480px) {
+            header img {
+                max-height: 32px; /* Réduit la taille du logo sur les petits écrans */
+            }
+        }
+
         h1{font-size:clamp(20px,3.8vw,28px);margin:8px 0}
         
         /* Styles pour la disposition des éléments de formulaire en grille */
