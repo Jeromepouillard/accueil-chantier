@@ -1,105 +1,93 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="robots" content="noindex">
-  <title>Accueil Chantier – PR Desjardins</title>
-  <style>
-    :root { --brand:#000; --accent:#0078d4; --accent-hover:#005a9e; }
-    * { box-sizing: border-box; }
-    html, body { height: 100%; margin: 0; }
-    body {
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      color: var(--brand);
-      background: #fff url("assets/bg-honeycomb.png") center/340px repeat;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      display: flex; align-items: center; justify-content: center;
-      padding: 24px;
-    }
-    .card {
-      width: 100%;
-      max-width: 720px;
-      background: rgba(255,255,255,0.9);
-      backdrop-filter: saturate(120%) blur(2px);
-      border-radius: 16px;
-      padding: 24px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.08);
-    }
-    header { display:flex; align-items:center; gap:16px; margin-bottom: 8px; }
-    header img {
-      max-height: 40px;      /* taille max */
-      max-width: 100%;       /* jamais dépasser la largeur dispo */
-      height: auto;          /* garder les proportions */
-      width: auto;
-    }
-    @media (max-width: 480px) {
-      header img {
-        max-height: 32px;
-      }
-    }
-    h1 { font-size: clamp(22px, 4.5vw, 28px); margin: 8px 0 12px; }
-    p.lead { margin: 0 0 16px; line-height: 1.4; }
-    ol { margin: 10px 0 22px; padding-left: 18px; }
-    .btn{
-      display:block; width:100%;
-      padding:14px 18px; margin:10px 0;
-      text-align:center; text-decoration:none; font-weight:600;
-      color:#111; background:#F2F4F7;           /* gris pâle */
-      border:1px solid #E5E7EB;                 /* liseré propre */
-      border-radius:8px;                         /* arrondi + discret */
-      box-shadow:0 1px 2px rgba(0,0,0,.04);      /* très léger relief */
-      transition:background .15s ease, border-color .15s ease, transform .02s;
-    }
-    .btn:hover{ background:#E9EDF3; border-color:#D8DDE5; }
-    .btn:active{ transform:translateY(1px); }
-    .btn:focus-visible{ outline:2px solid #111; outline-offset:2px; }
-    .subtle { font-size: 13px; opacity:.8; margin-top: 4px; }
-    .note {
-      background: #fff3cd; border:1px solid #ffe08a; color:#614400;
-      padding:10px 12px; border-radius:10px; font-size:14px; margin-top:14px;
-    }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex">
+  <title>Accueil Chantier – PR Desjardins</title>
+  <style>
+    :root { --brand:#000; --accent:#0078d4; --accent-hover:#005a9e; }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--brand);
+      background: #fff url("assets/bg-honeycomb.png") center/340px repeat;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      display: flex; align-items: center; justify-content: center;
+      padding: 24px;
+    }
+    .card {
+      width: 100%;
+      max-width: 720px;
+      background: rgba(255,255,255,0.9);
+      backdrop-filter: saturate(120%) blur(2px);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+    }
+    header { display:flex; align-items:center; gap:16px; margin-bottom: 8px; }
+    header img {
+      max-height: 40px;
+      max-width: 100%;
+      height: auto;
+      width: auto;
+    }
+    @media (max-width: 480px) {
+      header img {
+        max-height: 32px;
+      }
+    }
+    h1 { font-size: clamp(22px, 4.5vw, 28px); margin: 8px 0 12px; }
+    p.lead { margin: 0 0 16px; line-height: 1.4; }
+    .btn{
+      display:block; width:100%;
+      padding:14px 18px; margin:10px 0;
+      text-align:center; text-decoration:none; font-weight:600;
+      color:#111; background:#F2F4F7;
+      border:1px solid #E5E7EB;
+      border-radius:8px;
+      box-shadow:0 1px 2px rgba(0,0,0,.04);
+      transition:background .15s ease, border-color .15s ease, transform .02s;
+    }
+    .btn:hover{ background:#E9EDF3; border-color:#D8DDE5; }
+    .btn:active{ transform:translateY(1px); }
+    .btn:focus-visible{ outline:2px solid #111; outline-offset:2px; }
+    .subtle { font-size: 13px; opacity:.8; margin-top: 4px; }
+  </style>
 </head>
 <body>
-  <main class="card">
-    <header>
-      <img src="assets/logo-prdesjardins.png" alt="P+R Desjardins">
-      <div>
-        <h1>Accueil Chantier – Formulaire de présence</h1>
-        <div class="subtle">Merci de compléter cette procédure avant d’entrer sur le chantier.</div>
-      </div>
-    </header>
+  <main class="card">
+    <header>
+      <img src="assets/logo-prdesjardins.png" alt="P+R Desjardins">
+      <div>
+        <h1>Accueil Chantier – Formulaire de présence</h1>
+        <div class="subtle">Bienvenue sur le chantier. Veuillez suivre les étapes pour compléter votre accueil.</div>
+      </div>
+    </header>
 
-    <p class="lead">Étapes ultra simples :</p>
-    <ol>
-      <li> Téléchargez le formulaire PDF</li>
-      <li> Remplissez-le sur votre téléphone</li>
-      <li> Appuyez sur <strong>ENVOYER</strong> dans le PDF</li>
-    </ol>
-    <!-- Bouton -->
-    <a class="btn" href="assets/Accueil-Travailleurs.pdf" download="Accueil-Chantier.pdf" rel="noopener">
-  📄 Télécharger le PDF
-</a>
-      📄 Télécharger et envoyer le PDF
-    </a>
-    <div class="note">
-      ⚠️ Si le bouton <strong>ENVOYER</strong> ne s’ouvre pas : ouvrir le PDF avec l’app <strong>Adobe Acrobat Reader</strong> (gratuite), puis réessayer.
-    </div>
-    <div class="note">
-      <strong>Après le téléchargement :</strong><br>
-      iPhone → Ouvrir l’app <strong>Fichiers</strong> ▸ appuyez sur le PDF ▸ <strong>Partager</strong> ▸ <strong>Ouvrir dans Adobe Acrobat</strong><br>
-      Android → Ouvrir le dossier <strong>Téléchargements</strong> ▸ touchez le PDF ▸ <strong>Ouvrir avec Adobe Acrobat</strong>
-    </div>
-    <a class="btn" href="https://apps.apple.com/app/adobe-acrobat-reader-pdf/id469337564" target="_blank" rel="noopener">
-       Installer Adobe Acrobat (iPhone)
-    </a>
-    <a class="btn" href="https://play.google.com/store/apps/details?id=com.adobe.reader" target="_blank" rel="noopener">
-     Installer Adobe Acrobat (Android)
-    </a>
-  </main>
+    <p class="lead">Commencez par remplir le formulaire de présence en ligne.</p>
+
+    <a class="btn" href="formulaire.html">
+      ✍️ Remplir le formulaire
+    </a>
+
+    <p class="lead" style="margin-top: 24px;">Si vous avez déjà rempli le formulaire et généré le PDF, vous pouvez l'envoyer par e-mail ci-dessous.</p>
+    <a class="btn" id="send-btn" href="#">
+      ✉️ Envoyer le formulaire par e-mail
+    </a>
+
+    <p class="subtle" style="text-align: center; margin-top: 24px;">
+      © P+R Desjardins. Tous droits réservés.
+    </p>
+  </main>
+  <script>
+    document.getElementById('send-btn').addEventListener('click', function(e) {
+      e.preventDefault();
+      alert('Veuillez d\'abord remplir le formulaire et télécharger le PDF.');
+    });
+  </script>
 </body>
 </html>
-
 
