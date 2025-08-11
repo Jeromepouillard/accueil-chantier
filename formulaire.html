@@ -601,13 +601,13 @@
                 const signatureY = 38 * 2.835; // Position Y en mm (à partir du bord bas du PDF)
                 // Définir un facteur de grossissement (30% plus gros)
                 const scaleFactor = 1.30;
-                const signatureWidth = 55; // Largeur de l'image de signature en mm
-                // J'utilise 150 comme exemple, mais vous devriez la changer selon la taille de votre zone de signature
-                const signatureWidth = baseWidth * scaleFactor;
+                // Calculer la largeur et la hauteur avec le facteur de grossissement
+                const signatureWidth = 100 * scaleFactor;
                 const signatureHeight = (signatureImage.height * signatureWidth) / signatureImage.width;
+
                 lastPage.drawImage(signatureImage, {
                     x: signatureX,
-                    y: signatureY, 
+                    y: signatureY,
                     width: signatureWidth,
                     height: signatureHeight,
                 });
