@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="robots" content="noindex">
   <title>Accueil Chantier – PR Desjardins</title>
-    <style>
+  <style>
     :root { --brand:#000; --accent:#0078d4; --accent-hover:#005a9e; }
     * { box-sizing: border-box; }
     html, body { height: 100%; margin: 0; }
@@ -41,7 +41,6 @@
     }
     h1 { font-size: clamp(22px, 4.5vw, 28px); margin: 8px 0 12px; }
     p.lead { margin: 0 0 16px; line-height: 1.4; }
-    ol { margin: 10px 0 22px; padding-left: 18px; }
     .btn{
       display:block; width:100%;
       padding:14px 18px; margin:10px 0;
@@ -56,69 +55,39 @@
     .btn:active{ transform:translateY(1px); }
     .btn:focus-visible{ outline:2px solid #111; outline-offset:2px; }
     .subtle { font-size: 13px; opacity:.8; margin-top: 4px; }
-    .note {
-      background: #fff3cd; border:1px solid #ffe08a; color:#614400;
-      padding:10px 12px; border-radius:10px; font-size:14px; margin-top:14px;
-    }
-    .form-group { margin-bottom: 16px; }
-    .form-group label { font-weight: 600; display: block; margin-bottom: 4px; }
-    .form-group input[type="text"], .form-group input[type="tel"] {
-      width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;
-    }
-    .checkbox-group label { font-weight: 400; display: block; }
-    .checkbox-group input { margin-right: 8px; }
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
-    h2 { font-size: 1.2em; margin-top: 24px; margin-bottom: 8px; }
   </style>
 </head>
 <body>
-  <main class="card" id="form-content">
+  <main class="card">
     <header>
       <img src="assets/logo-prdesjardins.png" alt="P+R Desjardins">
       <div>
         <h1>Accueil Chantier – Formulaire de présence</h1>
-        <div class="subtle">Merci de compléter cette procédure avant d’entrer sur le chantier.</div>
+        <div class="subtle">Bienvenue sur le chantier. Veuillez suivre les étapes pour compléter votre accueil.</div>
       </div>
     </header>
 
-    <form id="chantier-form">
-      <div class="form-group">
-        <label for="nomProjet">Nom du projet</label>
-        <input type="text" id="nomProjet" name="nomProjet" required>
-      </div>
-      <div class="grid-2">
-        <div class="form-group">
-          <label for="numProjet"># Projet</label>
-          <input type="text" id="numProjet" name="numProjet" required>
-        </div>
-        <div class="form-group">
-          <label for="date">Date</label>
-          <input type="date" id="date" name="date" required>
-        </div>
-      </div>
+    <p class="lead">Commencez par remplir le formulaire de présence en ligne.</p>
 
-      <h2>Informations du travailleur</h2>
-      <div class="form-group">
-        <label for="nomPrenom">Prénom et Nom</label>
-        <input type="text" id="nomPrenom" name="nomPrenom" required>
-      </div>
-      <div class="grid-2">
-        <div class="form-group">
-          <label for="telephone">Téléphone</label>
-          <input type="tel" id="telephone" name="telephone" required>
-        </div>
-        <div class="form-group">
-          <label for="entreprise">Entreprise</label>
-          <input type="text" id="entreprise" name="entreprise" required>
-        </div>
-      </div>
-            <button type="submit" class="btn">Générer et envoyer le formulaire</button>
-    </form>
+    <a class="btn" href="formulaire.html">
+      ✍️ Remplir le formulaire
+    </a>
+
+    <p class="lead" style="margin-top: 24px;">Si vous avez déjà rempli le formulaire et généré le PDF, vous pouvez l'envoyer par e-mail ci-dessous.</p>
+    <a class="btn" id="send-btn" href="#">
+      ✉️ Envoyer le formulaire par e-mail
+    </a>
+
+    <p class="subtle" style="text-align: center; margin-top: 24px;">
+      © P+R Desjardins. Tous droits réservés.
+    </p>
   </main>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <script src="app.js"></script>
+  <script>
+    document.getElementById('send-btn').addEventListener('click', function(e) {
+      e.preventDefault();
+      alert('Veuillez d\'abord remplir le formulaire et télécharger le PDF.');
+    });
+  </script>
 </body>
 </html>
 
