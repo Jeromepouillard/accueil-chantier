@@ -599,6 +599,8 @@
                 // alors sa position Y dans pdf-lib serait `lastPage.getHeight() - 50 - 20`.
                 const signatureX = 90 * 2.835;  // Position X en mm (à partir du bord gauche du PDF)
                 const signatureY = 38 * 2.835; // Position Y en mm (à partir du bord bas du PDF)
+                // Définir un facteur de grossissement (30% plus gros)
+                const scaleFactor = 1.30;
                 const signatureWidth = 55; // Largeur de l'image de signature en mm
                 const signatureHeight = signatureImage.height * signatureWidth / signatureImage.width; // Maintient les proportions
 
