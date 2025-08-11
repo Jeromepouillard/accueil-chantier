@@ -105,40 +105,46 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
   <script>
-    document.getElementById('generate-pdf').addEventListener('click', function() {
-      const formContent = document.getElementById('form-to-print');
-     
-      // Options pour la génération du PDF
-      const options = {
-        scale: 2, // Augmente la résolution pour une meilleure qualité
-        useCORS: true,
-        scrollY: 0,
-      };
+  document.getElementById('generate-pdf').addEventListener('click', function() {
+    const formContent = document.getElementById('form-to-print');
+  
+    const options = {
+      scale: 2,
+      useCORS: true,
+      scrollY: 0,
+    };
 
-      html2canvas(formContent, options).then(canvas => {
-        const imgData = canvas.toDataURL('image/png');
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF('p', 'mm', 'a4');
-        
-        const imgWidth = 210; // A4 width in mm
-        const pageHeight = 295; // A4 height in mm
-        const imgHeight = canvas.height * imgWidth / canvas.width;
-        let heightLeft = imgHeight;
-        let position = 0;
+    html2canvas(formContent, options).then(canvas => {
+      const imgData = canvas.toDataURL('image/png');
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF('p', 'mm', 'a4');
+    
+      const imgWidth = 210;
+      const pageHeight = 295;
+      const imgHeight = canvas.height * imgWidth / canvas.width;
+      let heightLeft = imgHeight;
+      let position = 0;
 
-        doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
+      doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
 
-        while (heightLeft >= 0) {
-          position = heightLeft - imgHeight;
-          doc.addPage();
-          doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-          heightLeft -= pageHeight;
-        }
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight;
+        doc.addPage();
+        doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
 
-        doc.save('Formulaire-Chantier.pdf');
-      });
-    });
+      // Sauvegarde du PDF dans une variable
+      const pdfOutput = doc.output('datauristring');
+    
+      // Enregistrement du PDF dans le stockage local du navigateur
+      localStorage.setItem('generatedPdf', pdfOutput);
+
+      // Redirection vers la page d'accueil
+      window.location.href = 'index.html';
+    });
+  });
   </script>
 </body>
 </html>
