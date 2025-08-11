@@ -14,7 +14,6 @@
             margin:0;
             font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
             background:#fff;
-            /* L'affichage flexible est retiré du body pour permettre le défilement naturel */
             padding:24px; /* Garder le padding autour de la carte */
             color:var(--brand);
             overflow-y: auto; /* Permettre le défilement vertical si le contenu dépasse */
@@ -32,10 +31,18 @@
             box-shadow:0 10px 30px rgba(2,8,23,.06);
             /* Min-height pour s'assurer qu'elle prend de la place, même avec peu de contenu */
             min-height: 200px; 
+            margin: 0 auto; /* Centre la carte horizontalement */
         }
         
         /* Styles de l'en-tête de la carte (logo et titre) */
-        header{display:flex;gap:16px;align-items:center;margin-bottom:12px}
+        header { 
+            display: flex; 
+            flex-direction: column; /* Empile les éléments (logo et div de texte) verticalement */
+            align-items: center; /* Centre les éléments horizontalement dans l'en-tête */
+            gap: 8px; /* Réduit l'espace entre le logo et le texte */
+            margin-bottom: 12px; 
+            text-align: center; /* Centre le texte à l'intérieur du div si nécessaire */
+        }
         header img{height:40px} /* Hauteur fixe pour le logo */
         h1{font-size:clamp(20px,3.8vw,28px);margin:8px 0}
         
@@ -94,7 +101,7 @@
                 </div>
                 <div>
                     <label for="NumProjet"># Projet</label>
-                    <input id="NumProjet" placeholder="# ACCUEIL" />
+                    <input id="NumProjet" placeholder="Ex: 12345" /> <!-- Placeholder modifié -->
                 </div>
                 <div>
                     <label for="MetierCCQ">Métier CCQ</label>
@@ -113,19 +120,19 @@
                     <input id="Entreprise" />
                 </div>
                 <div>
-                    <label for="Telephone">Téléphone</label>
+                    <label for="Telephone">Téléphone (principal)</label> <!-- Libellé modifié -->
                     <input id="Telephone" type="tel" />
                 </div>
                 <div>
-                    <label for="Telephone2">Téléphone 2</label>
+                    <label for="Telephone2">Téléphone (secondaire)</label> <!-- Libellé modifié -->
                     <input id="Telephone2" type="tel" />
                 </div>
                 <div>
-                    <label for="Telephone3">Téléphone 3</label>
+                    <label for="Telephone3">Téléphone (contact d'urgence)</label> <!-- Libellé modifié -->
                     <input id="Telephone3" type="tel" />
                 </div>
                 <div>
-                    <label for="ContactUrgence">Contact d'urgence</label>
+                    <label for="ContactUrgence">Nom du contact d'urgence</label> <!-- Libellé modifié -->
                     <input id="ContactUrgence" />
                 </div>
             </div>
@@ -228,17 +235,19 @@
         const map = {
             // En-tête du formulaire
             nomProjet: ["NomProjet","Nom du projet","Nom Projet"],
-            numProjet: ["Num Projet","# Projet","NumProjet"],
+            // REMARQUE: "# Projet" est maintenant séparé de "# ACCUEIL"
+            numProjet: ["Num Projet","# Projet","NumProjet"], 
             metierCCQ: ["Métier CCQ","Metier CCQ"],
             echeanceCCQ: ["Échéance Carte CCQ","Echéance Carte CCQ","Échéance carte CCQ"],
 
             // Coordonnées du travailleur
             nomTravailleur: ["NomTravailleur","Travailleur Prénom et Nom en lettres moulées","Prénom et Nom"],
             entreprise: ["Entreprise"],
+            // Téléphones: les noms dans le PDF peuvent différer légèrement
             tel1: ["Téléphone","Telephone"],
             tel2: ["Téléphone_2","Telephone_2"],
             tel3: ["Téléphone_3","Telephone_3"],
-            contactUrgence: ["Contact durgence","Contact d'urgence","Contact urgence"],
+            contactUrgence: ["Contact durgence","Contact d'urgence","Contact urgence"], // Le nom du contact d'urgence
 
             // Choix Oui/Non (stockés en texte dans le PDF original)
             rss: ["Rss"],
@@ -292,7 +301,7 @@
             const $ = id => document.getElementById(id);
             const values = {
                 nomProjet: $("NomProjet").value,
-                numProjet: $("NumProjet").value,
+                numProjet: $("NumProjet").value, // Récupère seulement le numéro de projet
                 metierCCQ: $("MetierCCQ").value,
                 echeanceCCQ: $("EcheanceCCQ").value, // Format YYYY-MM-DD
                 nomTravailleur: $("NomTravailleur").value,
@@ -356,7 +365,7 @@
 
             // Remplissage des champs de texte
             setText(form, map.nomProjet, v.nomProjet);
-            setText(form, map.numProjet, v.numProjet);
+            setText(form, map.numProjet, v.numProjet); // Utilise seulement le numéro de projet
             setText(form, map.metierCCQ, v.metierCCQ);
             
             // Conversion de la date (YYYY-MM-DD en DD/MM/YYYY)
