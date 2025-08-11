@@ -223,15 +223,21 @@
                 </div>
             </div>
 
-            <!-- Section Engagement du travailleur -->
+            <!-- Section Engagement du travailleur - MODIFIÉE -->
             <div class="section">
                 <h3>ENGAGEMENT DU TRAVAILLEUR</h3>
                 <p class="subtle" style="margin-bottom: 10px;">
                     Sur l'ensemble des chantiers, les règles de sécurité telles que décrites dans le Code de Santé et Sécurité pour les travaux de construction s'appliquent.
                 </p>
-                <div class="inline">
-                    <input type="checkbox" id="Engagement" />
-                    <label for="Engagement">Je m'engage à prendre connaissance du programme de prévention de l'entrepreneur général applicable au chantier, des tolérances zéro de la CNESST et je m'engage à les respecter. Notamment, je m'engage à n'entreprendre aucun travail pour lesquels j'ai constaté un risque pour ma sécurité ou celle d'une autre personne et d'aviser dès que possible mon supérieur immédiat de tout risque constaté. Je m'engage également à ne pas effectuer ou opérer de machinerie sans avoir préalablement avoir reçu la formation concernant les risques spécifiques. J'ai été informé de la gradation des mesures disciplinaires, des consignes à suivre lors d'un accident de travail avec ou sans perte de temps et j'ai fait la visite du chantier.</label>
+                <p style="margin-bottom: 15px;">
+                    Je m'engage à prendre connaissance du programme de prévention de l'entrepreneur général applicable au chantier, des tolérances zéro de la CNESST et je m'engage à les respecter. Notamment, je m'engage à n'entreprendre aucun travail pour lesquels j'ai constaté un risque pour ma sécurité ou celle d'une autre personne et d'aviser dès que possible mon supérieur immédiat de tout risque constaté. Je m'engage également à ne pas effectuer ou opérer de machinerie sans avoir préalablement avoir reçu la formation concernant les risques spécifiques. J'ai été informé de la gradation des mesures disciplinaires, des consignes à suivre lors d'un accident de travail avec ou sans perte de temps et j'ai fait la visite du chantier.
+                </p>
+                <!-- Nouveau paragraphe pour le texte de confirmation de la case à cocher -->
+                <div class="inline" style="display: block; margin-top: 15px;">
+                    <label>
+                        <input type="checkbox" id="Engagement" /> 
+                        En cochant cette case, je confirme avoir lu l'entièreté du document et de mes engagements.
+                    </label>
                 </div>
             </div>
 
@@ -394,7 +400,7 @@
                 // mais on peut toujours les cocher/décocher dans le PDF si nécessaire via `buildPdf`
                 // par exemple, setCheck(form, map.RisquesGeneraux, true);
 
-                engagement: $("Engagement").checked,
+                engagement: $("Engagement").checked, // C'est cette valeur qui sera utilisée pour cocher/décocher
 
                 // Nouveaux champs du bas de page
                 travailleurNomFinal: $("TravailleurNomFinal").value,
