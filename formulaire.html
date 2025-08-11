@@ -285,6 +285,11 @@
         // Utilitaires pour gérer les noms de champs PDF qui peuvent varier
         // Permet de trouver un champ par plusieurs noms possibles
         function getFieldByNames(form, names) {
+            // S'assure que 'names' est toujours un tableau
+            if (!Array.isArray(names)) {
+                console.error("getFieldByNames: 'names' n'est pas un tableau.", names);
+                return null;
+            }
             for (const n of names) {
                 try { return form.getField(n); } catch(e) {}
             }
@@ -354,6 +359,7 @@
             // Signature ne sera PAS un champ de formulaire PDF mais une image ajoutée.
             travailleurNomFinal: ["Travailleur: (Prénom et Nom en lettres moulées)","Nom et Prénom","Nom Prenom"], // Ajouté pour le champ de texte
             dateFinale: ["Date Finale", "Date"] // Ajouté pour la date du bas
+            // RETIRÉ: signature: ["Signature26_es_:signer:signature:"] car ce n'est pas un champ de formulaire PDF.
         };
 
         // Charge le modèle PDF à partir de l'URL spécifiée
@@ -396,10 +402,6 @@
                     Autres: $("Autres").checked,
                 },
                 
-                // Sujets traités NE SONT PLUS lus de l'UI
-                // mais on peut toujours les cocher/décocher dans le PDF si nécessaire via `buildPdf`
-                // par exemple, setCheck(form, map.RisquesGeneraux, true);
-
                 engagement: $("Engagement").checked, // C'est cette valeur qui sera utilisée pour cocher/décocher
 
                 // Nouveaux champs du bas de page
