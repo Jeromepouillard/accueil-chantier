@@ -602,8 +602,9 @@
                 // Définir un facteur de grossissement (30% plus gros)
                 const scaleFactor = 1.30;
                 const signatureWidth = 55; // Largeur de l'image de signature en mm
-                const signatureHeight = signatureImage.height * signatureWidth / signatureImage.width; // Maintient les proportions
-
+                // J'utilise 150 comme exemple, mais vous devriez la changer selon la taille de votre zone de signature
+                const signatureWidth = baseWidth * scaleFactor;
+                const signatureHeight = (signatureImage.height * signatureWidth) / signatureImage.width;
                 lastPage.drawImage(signatureImage, {
                     x: signatureX,
                     y: signatureY, 
