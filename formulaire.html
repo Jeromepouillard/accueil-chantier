@@ -93,6 +93,19 @@
         
         /* Styles pour les éléments alignés en ligne (par ex. label + select) */
         .inline{display:flex;align-items:center;gap:10px}
+
+        /* Styles spécifiques pour la zone de signature */
+        #signatureCanvas {
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            background-color: #f8fafc;
+            touch-action: none; /* Empêche le défilement lors du dessin */
+        }
+        .signature-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -169,42 +182,49 @@
                 <textarea id="SanteDetails" rows="2" placeholder="Asthme, allergie, etc."></textarea>
             </div>
 
-            <!-- Section Formations du travailleur -->
+            <!-- Nouvelle Section : OBLIGATIONS EN TOUT TEMPS -->
             <div class="section">
-                <h3>FORMATIONS DU TRAVAILLEUR</h3>
-                <div class="checkboxes">
-                    <label><input type="checkbox" id="Cadenassage"> Cadenassage</label>
-                    <label><input type="checkbox" id="Amiante"> Amiante / silice</label>
-                    <label><input type="checkbox" id="EspaceClos"> Espace clos</label>
-                    <label><input type="checkbox" id="Secourisme"> Secourisme en milieu de travail</label>
-                    <label><input type="checkbox" id="Nacelle"> Nacelle</label>
-                    <label><input type="checkbox" id="ProtectionRespiratoire"> Protection respiratoire (Fit Test 2 ans)</label>
-                    <label><input type="checkbox" id="SIMDUT"> SIMDUT 2015 obligatoire</label>
-                    <label><input type="checkbox" id="Plateforme"> Plateforme élévatrice</label>
-                    <label><input type="checkbox" id="Autres"> Autres</label>
-                </div>
-            </div>
-
-            <!-- Section Sujets traités (accueil) -->
-            <div class="section">
-                <h3>Sujets traités (accueil)</h3>
-                <div class="checkboxes">
-                    <label><input type="checkbox" id="RisquesGeneraux"> Risques généraux</label>
-                    <label><input type="checkbox" id="RisquesSpecifiques"> Risques spécifiques au chantier</label>
-                    <label><input type="checkbox" id="Evacuation"> Procédure d'évacuation / Rassemblement</label>
-                    <label><input type="checkbox" id="Accident"> Procédure en cas d'accident</label>
-                    <label><input type="checkbox" id="Politiques"> Politiques alcool, drogues, harcèlement, violence</label>
-                    <label><input type="checkbox" id="ToleranceZero"> Tolérance zéro</label>
-                    <label><input type="checkbox" id="DroitsObligations"> Droits et obligations</label>
-                    <label><input type="checkbox" id="EPI"> EPI</label>
-                </div>
+                <h3>OBLIGATIONS EN TOUT TEMPS</h3>
+                <p>
+                    <strong>TRAVAUX EN COLLABORATION AVEC P+R</strong><br>
+                    <strong>TOLÉRANCE ZÉRO</strong> En tout temps, les travaux doivent être exécutés de façon sécuritaire pour soi et pour tous les autres travailleurs présents sur le chantier, il est de la responsabilité de chacun de limiter au maximum les différents risques liés aux travaux. Poussière de silice cristalline - port d'appareil de protection respiratoire visage rasé OBLIGATOIRE, procédé humide ou captation à la source - Système de ventilation locale - isolation des postes de travail, Amiante suivre les recommandations selon le niveau de contamination, port des EPI équipements de protection individuels obligatoires, sécurité des machines, inspections obligatoires et s'assurer de la présence de dispositifs de sécurité.
+                </p>
             </div>
 
             <!-- Section Engagement du travailleur -->
             <div class="section">
+                <h3>ENGAGEMENT DU TRAVAILLEUR</h3>
+                <p class="subtle" style="margin-bottom: 10px;">
+                    Sur l'ensemble des chantiers, les règles de sécurité telles que décrites dans le Code de Santé et Sécurité pour les travaux de construction s'appliquent.
+                </p>
                 <div class="inline">
                     <input type="checkbox" id="Engagement" />
-                    <label for="Engagement">J'ai pris connaissance du programme de prévention, tolérances zéro, etc.</label>
+                    <label for="Engagement">Je m'engage à prendre connaissance du programme de prévention de l'entrepreneur général applicable au chantier, des tolérances zéro de la CNESST et je m'engage à les respecter. Notamment, je m'engage à n'entreprendre aucun travail pour lesquels j'ai constaté un risque pour ma sécurité ou celle d'une autre personne et d'aviser dès que possible mon supérieur immédiat de tout risque constaté. Je m'engage également à ne pas effectuer ou opérer de machinerie sans avoir préalablement avoir reçu la formation concernant les risques spécifiques. J'ai été informé de la gradation des mesures disciplinaires, des consignes à suivre lors d'un accident de travail avec ou sans perte de temps et j'ai fait la visite du chantier.</label>
+                </div>
+            </div>
+
+            <!-- Nouvelle Section : Bas du formulaire (Nom, Signature, Date) -->
+            <div class="section">
+                <div class="grid">
+                    <div>
+                        <label for="TravailleurNomFinal">Travailleur: (Prénom et Nom en lettres moulées)</label>
+                        <input id="TravailleurNomFinal" type="text" />
+                    </div>
+                </div>
+
+                <div style="margin-top: 20px;">
+                    <label>Signature</label>
+                    <canvas id="signatureCanvas" width="400" height="100"></canvas>
+                    <div class="signature-controls">
+                        <button type="button" id="clearSignature">Effacer la signature</button>
+                    </div>
+                </div>
+                
+                <div class="grid" style="margin-top: 20px;">
+                    <div>
+                        <label for="DateFinale">Date</label>
+                        <input id="DateFinale" type="date" />
+                    </div>
                 </div>
             </div>
 
@@ -251,7 +271,6 @@
         const map = {
             // En-tête du formulaire
             nomProjet: ["NomProjet","Nom du projet","Nom Projet"],
-            // REMARQUE: "# Projet" est maintenant séparé de "# ACCUEIL"
             numProjet: ["Num Projet","# Projet","NumProjet"], 
             metierCCQ: ["Métier CCQ","Metier CCQ"],
             echeanceCCQ: ["Échéance Carte CCQ","Echeance Carte CCQ","Échéance carte CCQ"],
@@ -259,11 +278,10 @@
             // Coordonnées du travailleur
             nomTravailleur: ["NomTravailleur","Travailleur Prénom et Nom en lettres moulées","Prénom et Nom"],
             entreprise: ["Entreprise"],
-            // Téléphones: les noms dans le PDF peuvent différer légèrement
             tel1: ["Téléphone","Telephone"],
             tel2: ["Téléphone_2","Telephone_2"],
             tel3: ["Téléphone_3","Telephone_3"],
-            contactUrgence: ["Contact durgence","Contact d'urgence","Contact urgence"], // Le nom du contact d'urgence
+            contactUrgence: ["Contact durgence","Contact d'urgence","Contact urgence"],
 
             // Choix Oui/Non (stockés en texte dans le PDF original)
             rss: ["Rss"],
@@ -281,7 +299,8 @@
             Plateforme: ["Plateforme élévatrice"],
             Autres: ["Autres"],
 
-            // Sujets traités (cases à cocher)
+            // Sujets traités (RETIRE du formulaire HTML, mais peut exister dans le PDF)
+            // Nous ne les remplirons plus via l'UI, mais ils ne causeront pas d'erreur s'ils existent dans le PDF.
             RisquesGeneraux: ["Risque généraux","Risques généraux"],
             RisquesSpecifiques: ["Risques spécifique","Risques spécifiques au chantier"],
             Evacuation: ["Procédure d'évacuation","Procédure d'évacuation / Rassemblement"],
@@ -294,16 +313,14 @@
             // Engagement du travailleur (case à cocher)
             Engagement: ["Case à cocher24","ENGAGEMENT DU TRAVAILLEUR","Engagement"],
 
-            // Champs de signature et de date dans le PDF
-            signature: ["Signature26_es_:signer:signature:"],
-            date1: ["Date27_es_:signer:date:","Date"],
-            date2: ["Date29_es_:signer:date:"]
+            // Nouveaux champs pour le bas du formulaire (Travailleur Nom Final, Date Finale)
+            // Signature ne sera PAS un champ de formulaire PDF mais une image ajoutée.
+            travailleurNomFinal: ["Travailleur: (Prénom et Nom en lettres moulées)","Nom et Prénom","Nom Prenom"], // Ajouté pour le champ de texte
+            dateFinale: ["Date Finale", "Date"] // Ajouté pour la date du bas
         };
 
         // Charge le modèle PDF à partir de l'URL spécifiée
         async function loadTemplate() {
-            // Assurez-vous que votre PDF est bien nommé 'accueil_travailleurs.pdf'
-            // et placé dans le dossier 'assets/' de votre projet GitHub.
             const url = 'assets/accueil_travailleurs.pdf'; 
             const buf = await fetch(url).then(r => {
                 if (!r.ok) throw new Error('PDF modèle introuvable à ' + url);
@@ -317,20 +334,19 @@
             const $ = id => document.getElementById(id);
             const values = {
                 nomProjet: $("NomProjet").value,
-                numProjet: $("NumProjet").value, // Récupère seulement le numéro de projet
+                numProjet: $("NumProjet").value,
                 metierCCQ: $("MetierCCQ").value,
-                echeanceCCQ: $("EcheanceCCQ").value, // Format YYYY-MM-DD
+                echeanceCCQ: $("EcheanceCCQ").value,
                 nomTravailleur: $("NomTravailleur").value,
                 entreprise: $("Entreprise").value,
                 tel1: $("Telephone").value,
                 tel2: $("Telephone2").value,
                 tel3: $("Telephone3").value,
                 contactUrgence: $("ContactUrgence").value,
-                rss: $("Rss").value === 'Oui', // Convertit "Oui" en true, "Non" en false
+                rss: $("Rss").value === 'Oui',
                 santePb: $("SantePb").value === 'Oui',
                 santeDetails: $("SanteDetails").value,
                 
-                // Collecte l'état des cases à cocher de formation
                 formations: {
                     Cadenassage: $("Cadenassage").checked,
                     Amiante: $("Amiante").checked,
@@ -342,30 +358,116 @@
                     Plateforme: $("Plateforme").checked,
                     Autres: $("Autres").checked,
                 },
-                // Collecte l'état des cases à cocher des sujets traités
-                sujets: {
-                    RisquesGeneraux: $("RisquesGeneraux").checked,
-                    RisquesSpecifiques: $("RisquesSpecifiques").checked,
-                    Evacuation: $("Evacuation").checked,
-                    Accident: $("Accident").checked,
-                    Politiques: $("Politiques").checked,
-                    ToleranceZero: $("ToleranceZero").checked,
-                    DroitsObligations: $("DroitsObligations").checked,
-                    EPI: $("EPI").checked,
-                },
-                // Collecte l'état de la case à cocher d'engagement
+                
+                // Sujets traités NE SONT PLUS lus de l'UI
+                // mais on peut toujours les cocher/décocher dans le PDF si nécessaire via `buildPdf`
+                // par exemple, setCheck(form, map.RisquesGeneraux, true);
+
                 engagement: $("Engagement").checked,
+
+                // Nouveaux champs du bas de page
+                travailleurNomFinal: $("TravailleurNomFinal").value,
+                dateFinale: $("DateFinale").value,
+                signatureData: getSignatureData(), // Récupère l'image de la signature
             };
 
-            // Sauvegarde le nom du travailleur dans localStorage pour la page d'accueil
             localStorage.setItem('lastTravailleurName', values.nomTravailleur);
             return values;
         }
+
+        // Fonctions pour la signature sur canvas
+        const canvas = document.getElementById('signatureCanvas');
+        const ctx = canvas.getContext('2d');
+        let drawing = false;
+
+        function resizeCanvas() {
+            // S'assurer que le canvas prend toute la largeur disponible dans son parent
+            canvas.width = canvas.offsetWidth;
+            // Pour maintenir une hauteur raisonnable sur mobile, on peut la fixer ou la calculer
+            canvas.height = 100; // Ou une valeur calculée si nécessaire
+            ctx.fillStyle = "#f8fafc"; // Fond clair pour la signature
+            ctx.fillRect(0, 0, canvas.width, canvas.height); // Remplir le fond
+            ctx.strokeStyle = '#000'; // Couleur du trait
+            ctx.lineWidth = 2; // Épaisseur du trait
+            ctx.lineCap = 'round'; // Bords arrondis
+        }
+
+        // Redimensionne le canvas au chargement et lors du redimensionnement de la fenêtre
+        window.addEventListener('load', resizeCanvas);
+        window.addEventListener('resize', resizeCanvas);
+
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mousemove', draw);
+        // Support tactile
+        canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault(); // Empêche le défilement
+            startDrawing(e.touches[0]);
+        });
+        canvas.addEventListener('touchend', stopDrawing);
+        canvas.addEventListener('touchmove', (e) => {
+            e.preventDefault(); // Empêche le défilement
+            draw(e.touches[0]);
+        });
+
+        function startDrawing(e) {
+            drawing = true;
+            ctx.beginPath();
+            const rect = canvas.getBoundingClientRect();
+            ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+        }
+
+        function draw(e) {
+            if (!drawing) return;
+            const rect = canvas.getBoundingClientRect();
+            ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+            ctx.stroke();
+        }
+
+        function stopDrawing() {
+            drawing = false;
+        }
+
+        document.getElementById('clearSignature').addEventListener('click', () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "#f8fafc"; // Réapplique le fond clair après effacement
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        });
+
+        // Fonction pour récupérer les données de la signature (image)
+        function getSignatureData() {
+            // Vérifie si quelque chose a été dessiné (non vide)
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            let hasContent = false;
+            for (let i = 0; i < imageData.data.length; i += 4) {
+                // Si la composante alpha (transparence) est > 0, il y a du contenu dessiné
+                if (imageData.data[i + 3] > 0 && imageData.data[i] !== 248 && imageData.data[i+1] !== 250 && imageData.data[i+2] !== 252) { // Exclut la couleur de fond #f8fafc
+                    hasContent = true;
+                    break;
+                }
+            }
+            if (hasContent) {
+                return canvas.toDataURL('image/png');
+            }
+            return null; // Retourne null si le canvas est vide
+        }
+
+        // Pré-remplir la date du jour pour "DateFinale"
+        window.addEventListener('load', () => {
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            document.getElementById('DateFinale').value = `${year}-${month}-${day}`;
+            resizeCanvas(); // Assure que le canvas est bien dimensionné au chargement
+        });
+
 
         // Fonction principale pour construire le PDF
         async function buildPdf({ flatten = false, preview = false, share = false } = {}) {
             const pdf = await loadTemplate(); // Charge le PDF modèle
             const form = pdf.getForm(); // Accède aux champs du formulaire PDF
+            const pages = pdf.getPages(); // Accède aux pages du PDF
 
             // Debug : Affiche la liste des noms de champs détectés dans le PDF (pour débugger le mapping)
             try {
@@ -381,7 +483,7 @@
 
             // Remplissage des champs de texte
             setText(form, map.nomProjet, v.nomProjet);
-            setText(form, map.numProjet, v.numProjet); // Utilise seulement le numéro de projet
+            setText(form, map.numProjet, v.numProjet);
             setText(form, map.metierCCQ, v.metierCCQ);
             
             // Conversion de la date (YYYY-MM-DD en DD/MM/YYYY)
@@ -405,20 +507,57 @@
             for (const key of Object.keys(v.formations)) {
                 setCheck(form, map[key] || [key], !!v.formations[key]);
             }
+            
+            // Les "Sujets traités" ne sont plus dans le formulaire HTML, donc nous ne les mappons pas ici.
+            // Si vous voulez cocher certains de ces champs par défaut dans le PDF, faites-le ici.
+            // Ex: setCheck(form, map.RisquesGeneraux, true); // Pour cocher "Risques généraux" automatiquement
 
-            // Remplissage des cases à cocher pour les sujets traités
-            for (const key of Object.keys(v.sujets)) {
-                setCheck(form, map[key] || [key], !!v.sujets[key]);
-            }
+            setText(form, map.travailleurNomFinal, v.travailleurNomFinal);
+            
+            // Remplissage des dates de signature (avec la date du jour)
+            const today = new Date();
+            const todayStr = `${String(today.getDate()).padStart(2,'0')}/${String(today.getMonth()+1).padStart(2,'0')}/${today.getFullYear()}`;
+            // map.date1 et map.date2 sont pour les dates en haut du PDF, si elles existent.
+            // Sinon, nous utilisons dateFinale pour le bas.
+            setText(form, map.date1, todayStr); 
+            setText(form, map.date2, todayStr);
+            setText(form, map.dateFinale, todayStr); // Remplit la date en bas du PDF
 
             // Remplissage de la case à cocher d'engagement
             setCheck(form, map.Engagement, v.engagement);
 
-            // Remplissage des dates de signature (avec la date du jour)
-            const today = new Date();
-            const todayStr = `${String(today.getDate()).padStart(2,'0')}/${String(today.getMonth()+1).padStart(2,'0')}/${today.getFullYear()}`;
-            setText(form, map.date1, todayStr);
-            setText(form, map.date2, todayStr);
+            // GESTION DE LA SIGNATURE DESSINÉE
+            if (v.signatureData) {
+                try {
+                    const signatureImage = await pdf.embedPng(v.signatureData);
+                    // Détermine la dernière page pour placer la signature
+                    const lastPage = pages[pages.length - 1]; 
+                    
+                    // Ces coordonnées (x, y) et dimensions (width, height) sont des estimations.
+                    // Pour un placement pixel-par-pixel parfait sur le champ "Signature" du PDF,
+                    // il faudrait connaître les coordonnées exactes de ce champ dans le PDF
+                    // ou ajouter une nouvelle page dédiée à la signature si l'intégration est difficile.
+                    // Ici, on va tenter de la placer à un endroit raisonnable en bas de la dernière page.
+                    // Ces valeurs sont à ajuster précisément en fonction de votre PDF.
+                    const imageWidth = 100; // Largeur désirée pour l'image de signature en mm
+                    const imageHeight = signatureImage.height * imageWidth / signatureImage.width;
+                    const x = 50; // Position X en mm
+                    const y = 50; // Position Y en mm (depuis le bas de la page, donc 297-y pour le haut)
+                    
+                    lastPage.drawImage(signatureImage, {
+                        x: x,
+                        y: lastPage.getHeight() - y - imageHeight, // Calcule la position Y depuis le haut
+                        width: imageWidth,
+                        height: imageHeight,
+                    });
+                } catch (error) {
+                    console.error("Erreur lors de l'intégration de la signature :", error);
+                    alert("Attention : La signature n'a pas pu être intégrée au PDF.");
+                }
+            } else {
+                 alert("Attention : Veuillez signer le document avant de générer le PDF.");
+            }
+
 
             // Si "flatten" est vrai, les champs du formulaire sont fusionnés avec le document
             // Cela les rend non éditables une fois le PDF généré
@@ -428,36 +567,32 @@
             const filename = `Formulaire_PRD_${v.nomTravailleur.replace(/\s+/g, '_') || 'sans_nom'}_${Date.now()}.pdf`;
             const file = new File([bytes], filename, { type:'application/pdf' });
 
-            // Sauvegarde le PDF généré en base64 dans le localStorage
-            // pour que la page principale puisse potentiellement y faire référence
-            localStorage.setItem('generatedPdf', URL.createObjectURL(file)); // Stocke l'URL de l'objet Blob
-            localStorage.setItem('generatedPdfFileName', filename); // Stocke le nom du fichier
+            // Stockage local pour la page d'accueil (optionnel si non utilisé)
+            localStorage.setItem('generatedPdf', URL.createObjectURL(file)); 
+            localStorage.setItem('generatedPdfFileName', filename); 
 
             // Option de partage (Web Share API, idéal pour mobile)
             if (share && navigator.canShare?.({ files:[file] })) {
                 try { 
                     await navigator.share({ files:[file], title:'Formulaire PRD', text:'Voici votre formulaire PRD rempli.' }); 
-                    return; 
                 } catch(e) { 
                     console.error("Erreur de partage:", e);
-                    // L'utilisateur a probablement annulé le partage
                 }
             }
-
             // Option de prévisualisation dans une nouvelle fenêtre/onglet
-            if (preview) {
+            else if (preview) {
                 const url = URL.createObjectURL(new Blob([bytes], { type:'application/pdf' }));
                 window.open(url, '_blank');
-                return;
             }
-
-            // Téléchargement par défaut si les autres options ne sont pas utilisées
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(new Blob([bytes], { type:'application/pdf' }));
-            a.download = file.name;
-            document.body.appendChild(a); 
-            a.click(); 
-            a.remove();
+            // Téléchargement par défaut
+            else {
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(new Blob([bytes], { type:'application/pdf' }));
+                a.download = file.name;
+                document.body.appendChild(a); 
+                a.click(); 
+                a.remove();
+            }
         }
 
         // Événements des boutons
