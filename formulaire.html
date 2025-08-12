@@ -131,8 +131,7 @@
             <div>
                 <h1>Accueil des travailleurs — Générateur PDF éditable</h1>
                 <small class="muted">
-                    Place le PDF modèle à <code>/assets/accueil_travailleurs.pdf</code> (ton original renommé).
-                    Rien à payer, tout dans le navigateur.
+                    Remplissez le formulaire modèle.
                 </small>
             </div>
         </header>
@@ -141,43 +140,43 @@
             <!-- Section Informations du projet -->
             <div class="grid">
                 <div>
-                    <label for="NomProjet">Nom du projet</label>
+                    <label for="NomProjet">Nom du projet <span style="color: red;">*</span></label>
                     <input id="NomProjet" placeholder="Ex: Tour XYZ" />
                 </div>
                 <div>
-                    <label for="NumProjet"># Projet</label>
+                    <label for="NumProjet"># Projet <span style="color: red;">*</span></label>
                     <input id="NumProjet" placeholder="Ex: 12345" /> <!-- Placeholder modifié -->
                 </div>
                 <div>
-                    <label for="MetierCCQ">Métier CCQ</label>
+                    <label for="MetierCCQ">Métier CCQ <span style="color: red;">*</span></label>
                     <input id="MetierCCQ" />
                 </div>
                 <div>
-                    <label for="EcheanceCCQ">Échéance carte CCQ</label>
+                    <label for="EcheanceCCQ">Échéance carte CCQ <span style="color: red;">*</span></label>
                     <input id="EcheanceCCQ" type="date" />
                 </div>
                 <div>
-                    <label for="NomTravailleur">Prénom et Nom</label>
+                    <label for="NomTravailleur">Prénom et Nom <span style="color: red;">*</span></label>
                     <input id="NomTravailleur" />
                 </div>
                 <div>
-                    <label for="Entreprise">Entreprise</label>
+                    <label for="Entreprise">Entreprise <span style="color: red;">*</span></label>
                     <input id="Entreprise" />
                 </div>
                 <div>
-                    <label for="Telephone">Téléphone (principal)</label> <!-- Libellé modifié -->
+                    <label for="Telephone">Téléphone (Votre cellulaire) <span style="color: red;">*</span></label> <!-- Libellé modifié -->
                     <input id="Telephone" type="tel" />
                 </div>
                 <div>
-                    <label for="Telephone2">Téléphone (secondaire)</label> <!-- Libellé modifié -->
+                    <label for="Telephone2">Téléphone (Entreprise) <span style="color: red;">*</span></label> <!-- Libellé modifié -->
                     <input id="Telephone2" type="tel" />
                 </div>
                 <div>
-                    <label for="Telephone3">Téléphone (contact d'urgence)</label> <!-- Libellé modifié -->
+                    <label for="Telephone3">Téléphone (contact d'urgence) <span style="color: red;">*</span></label> <!-- Libellé modifié -->
                     <input id="Telephone3" type="tel" />
                 </div>
                 <div>
-                    <label for="ContactUrgence">Nom du contact d'urgence</label> <!-- Libellé modifié -->
+                    <label for="ContactUrgence">Nom du contact d'urgence <span style="color: red;">*</span></label> <!-- Libellé modifié -->
                     <input id="ContactUrgence" />
                 </div>
             </div>
@@ -186,11 +185,11 @@
             <div class="section">
                 <div class="row">
                     <div class="inline">
-                        <label for="Rss">Êtes‑vous intéressé à être RSS ?</label>
+                        <label for="Rss">Êtes‑vous intéressé à être RSS ? <span style="color: red;">*</span></label>
                         <select id="Rss"><option value="Non">Non</option><option value="Oui">Oui</option></select>
                     </div>
                     <div class="inline">
-                        <label for="SantePb">Problème de santé ?</label>
+                        <label for="SantePb">Problème de santé ? <span style="color: red;">*</span></label>
                         <select id="SantePb"><option value="Non">Non</option><option value="Oui">Oui</option></select>
                     </div>
                 </div>
@@ -200,7 +199,7 @@
 
             <!-- Nouvelle Section : OBLIGATIONS EN TOUT TEMPS -->
             <div class="section">
-                <h3>OBLIGATIONS EN TOUT TEMPS</h3>
+                <h3 style="color: #FF0000;">OBLIGATIONS EN TOUT TEMPS *</h3>
                 <p>
                     <strong>TRAVAUX EN COLLABORATION AVEC P+R</strong><br>
                     <strong>TOLÉRANCE ZÉRO</strong> En tout temps, les travaux doivent être exécutés de façon sécuritaire pour soi et pour tous les autres travailleurs présents sur le chantier, il est de la responsabilité de chacun de limiter au maximum les différents risques liés aux travaux. Poussière de silice cristalline - port d'appareil de protection respiratoire visage rasé OBLIGATOIRE, procédé humide ou captation à la source - Système de ventilation locale - isolation des postes de travail, Amiante suivre les recommandations selon le niveau de contamination, port des EPI équipements de protection individuels obligatoires, sécurité des machines, inspections obligatoires et s'assurer de la présence de dispositifs de sécurité.
@@ -209,7 +208,7 @@
 
             <!-- Section Formations du travailleur (réintégrée) -->
             <div class="section">
-                <h3>FORMATIONS DU TRAVAILLEUR</h3>
+                <h3 style="color: #FF0000;">FORMATIONS DU TRAVAILLEUR *</h3>
                 <div class="checkboxes">
                     <label><input type="checkbox" id="Cadenassage"> Cadenassage</label>
                     <label><input type="checkbox" id="Amiante"> Amiante / silice</label>
@@ -254,7 +253,7 @@
 
             <!-- Section Engagement du travailleur - MODIFIÉE -->
             <div class="section">
-                <h3>ENGAGEMENT DU TRAVAILLEUR</h3>
+                <h3 style="color: #FF0000;">ENGAGEMENT DU TRAVAILLEUR *</h3>
                 <p class="subtle" style="margin-bottom: 10px;">
                     Sur l'ensemble des chantiers, les règles de sécurité telles que décrites dans le Code de Santé et Sécurité pour les travaux de construction s'appliquent.
                 </p>
@@ -297,13 +296,10 @@
 
             <!-- Boutons d'action pour le PDF -->
             <div class="btns">
-                <button class="primary" id="btnGen">Générer le PDF (éditable)</button>
-                <button id="btnGenFlatten">Générer (aplati pour impression)</button>
-                <button id="btnPreview">Prévisualiser dans le navigateur</button>
                 <button id="btnShare">Partager (mobile)</button>
             </div>
             <small class="muted">
-                Astuce: ouvre la console F12 pour voir la liste exacte des noms de champs détectés dans le PDF (utile si certains noms varient).
+                Astuce: Cliquez sur "Partagez" pour envoyer le formulaire par courriel, à l'adresse suivante: drossy@prdesjardins.com
             </small>
         </form>
     </main>
@@ -687,9 +683,7 @@
         }
 
         // Événements des boutons
-        document.getElementById('btnGen').addEventListener('click', () => buildPdf({ flatten:false }));
-        document.getElementById('btnGenFlatten').addEventListener('click', () => buildPdf({ flatten:true }));
-        document.getElementById('btnPreview').addEventListener('click', () => buildPdf({ preview:true }));
+
         document.getElementById('btnShare').addEventListener('click', () => buildPdf({ share:true }));
     </script>
 </body>
