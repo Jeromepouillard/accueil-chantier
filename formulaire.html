@@ -575,7 +575,8 @@
 
         // Synchronisation automatique des champs
         document.getElementById('NomTravailleur').addEventListener('input', (event) => {
-            document.getElementById('TravailleurNomFinal').value = event.target.value;
+            // Convertit la valeur en majuscules avant de l'assigner au champ du bas
+            document.getElementById('TravailleurNomFinal').value = event.target.value.toUpperCase();
         });
 
         document.getElementById('DateDuJour').addEventListener('input', (event) => {
