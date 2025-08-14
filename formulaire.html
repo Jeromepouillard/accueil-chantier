@@ -672,11 +672,11 @@
                 const lastPage = pages[pages.length - 1];
                 
                 // Coordonnées de la signature (en points)
-                const signatureX = 75 * 2.835; // 75 mm du bord gauche
+                const signatureX = 80 * 2.835; // 75 mm du bord gauche
                 const signatureY = 38 * 2.835; // 38 mm du bas de la feuille
 
                 const scaleFactor = 1.05; // 5% plus grand
-                const baseWidth = 110; // Ajustez cette valeur pour contrôler la largeur de base de la signature
+                const baseWidth = 125; // Ajustez cette valeur pour contrôler la largeur de base de la signature
 
                 const signatureWidth = baseWidth * scaleFactor;
                 const signatureHeight = (signatureImage.height * signatureWidth) / signatureImage.width; 
