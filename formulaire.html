@@ -110,29 +110,22 @@
 
         /* Styles spécifiques pour la zone de signature */
         #signatureCanvas {
-            border: 1px solid #cbd5e1;
-            border-radius: 8px;
-            background-color: #f8fafc;
-            touch-action: none; /* Empêche le défilement lors du dessin */
-            /* Ajout d'un fond transparent pour la zone de dessin */
+            /* RÉ-APPLIQUÉ : */
+            border: 1px solid #cbd5e1; /* Re-ajoute la bordure */
+            background-color: #f8fafc; /* Re-ajoute la couleur de fond */
             background-image: linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee), 
                                 linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee);
             background-size: 20px 20px;
             background-position: 0 0, 10px 10px;
+            
+            touch-action: none; /* Empêche le défilement lors du dessin */
             position: relative; /* Pour positionner le texte d'instruction */
-            /* MODIFICATION ICI pour la taille du canvas dans la page */
             width: 100%; /* S'assure qu'il prend toute la largeur disponible de son parent */
             height: 120px; /* Nouvelle hauteur fixe pour plus d'espace */
         }
         #signatureCanvas::after {
-            content: "Dessinez votre signature ici";
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: #ccc;
-            font-size: 16px;
-            pointer-events: none; /* Permet aux événements de souris de passer à travers */
+            /* Le texte d'instruction est toujours caché car le fond est maintenant visible */
+            content: none; 
         }
         .signature-controls {
             display: flex;
@@ -480,6 +473,8 @@
             // S'assurer que le canvas prend toute la largeur disponible dans son parent
             canvas.width = canvas.offsetWidth;
             canvas.height = 120; // Nouvelle hauteur fixe pour plus d'espace 
+            ctx.clearRect(0, 0, canvas.width, canvas.height); // Efface le contenu du canvas
+            // IMPORTANT : Remplir le fond avec une couleur ici pour le rendre visible sur la page HTML
             ctx.fillStyle = "#f8fafc"; 
             ctx.fillRect(0, 0, canvas.width, canvas.height); 
             ctx.strokeStyle = '#000'; 
@@ -529,17 +524,22 @@
 
         document.getElementById('clearSignature').addEventListener('click', () => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+            // IMPORTANT : Remplir le fond avec une couleur ici pour le rendre visible sur la page HTML
             ctx.fillStyle = "#f8fafc"; 
             ctx.fillRect(0, 0, canvas.width, canvas.height);
         });
 
         // Fonction pour récupérer les données de la signature (image)
         function getSignatureData() {
+            // Vérifie si le canvas a été dessiné (non vide) en regardant si des pixels non-transparent ont été dessinés.
+            // On ne vérifie plus la couleur de fond, car le fond est transparent.
             const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
             let hasContent = false;
+            // On s'assure que le canal alpha est supérieur à 0 (non transparent) ET que les pixels ne sont pas la couleur de fond
+            const bgColor = {r: 248, g: 250, b: 252}; // #f8fafc en RGB
             for (let i = 0; i < imageData.data.length; i += 4) {
                 if (imageData.data[i + 3] > 0 && 
-                   !(imageData.data[i] === 248 && imageData.data[i+1] === 250 && imageData.data[i+2] === 252)) {
+                    !(imageData.data[i] === bgColor.r && imageData.data[i+1] === bgColor.g && imageData.data[i+2] === bgColor.b)) {
                     hasContent = true;
                     break;
                 }
