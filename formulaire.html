@@ -362,12 +362,28 @@
             try { checked ? f.check?.() : f.uncheck?.(); } catch(e) { /* Gère silencieusement les erreurs */ }
         }
 
+        // Définit la valeur d'un groupe de boutons radio dans le PDF
+        function setRadio(form, names, value) {
+            const f = getFieldByNames(form, names);
+            // Vérifie si le champ existe et possède la méthode 'select' (caractéristique d'un groupe radio)
+            if (f && typeof f.select === 'function') {
+                try {
+                    // pdf-lib's select method for radio groups takes the export value
+                    f.select(value);
+                } catch(e) {
+                    console.warn(`Erreur lors de la sélection du bouton radio pour le champ ${names.join('/')} avec la valeur '${value}':`, e);
+                }
+            } else {
+                console.warn(`Champ radio ${names.join('/')} non trouvé ou n'est pas un groupe radio.`);
+            }
+        }
+
         // Mapping des IDs des éléments HTML avec les noms des champs PDF
         // Cela permet de connecter facilement le formulaire HTML au PDF
         const map = {
             // En-tête du formulaire
             nomProjet: ["NomProjet","Nom du projet","Nom Projet"],
-            dateDuJour: ["Date"], // Le nouveau champ de date en haut, mappé au champ Date du PDF
+            dateDuJour: ["Date"], 
             metierCCQ: ["Métier CCQ","Metier CCQ"],
             echeanceCCQ: ["Échéance Carte CCQ","Echeance Carte CCQ","Échéance carte CCQ"],
 
@@ -379,10 +395,10 @@
             tel3: ["Téléphone_3","Telephone_3"],
             contactUrgence: ["Contact durgence","Contact d'urgence","Contact urgence"],
 
-            // Choix Oui/Non (stockés en texte dans le PDF original)
-            rss: ["Rss"],
-            sante_pb: ["Santé", "Santé_es_:sender:", "SANTÉ", "Sante_details", "Santé - précisez"], // Ajout de "Santé" comme premier nom
-            sante_details: ["Santé", "Santé_es_:sender:", "SANTÉ", "Sante_details", "Santé - précisez"], // Ajout de "Santé" comme premier nom pour les détails
+            // Choix Oui/Non (qui sont des groupes radio dans le PDF original)
+            rss: ["Rss"], // Nom du groupe radio pour RSS dans le PDF
+            sante_pb: ["sante_pb"], // Nom du groupe radio pour Problème de santé dans le PDF
+            sante_details: ["Santé", "Santé_es_:sender:", "SANTÉ", "Sante_details", "Santé - précisez"], // Champ texte pour les détails de santé
 
             // Formations (cases à cocher)
             Cadenassage: ["Cadenassage"],
@@ -399,8 +415,8 @@
             Engagement: ["Case à cocher24","ENGAGEMENT DU TRAVAILLEUR","Engagement"],
 
             // Champs pour le bas du formulaire (seront mis à jour automatiquement via JS)
-            travailleurNomFinal: ["Travailleur Prénom et Nom en lettres moulées", "Nom et Prénom", "Nom Prenom"], // Nom exact pour le PDF
-            dateFinale: ["Date27_es_:signer:date", "Date"], // Nom exact pour la date du bas du PDF
+            travailleurNomFinal: ["Travailleur Prénom et Nom en lettres moulées", "Nom et Prénom", "Nom Prenom"], 
+            dateFinale: ["Date27_es_:signer:date", "Date"], 
         };
 
         // Charge le modèle PDF à partir de l'URL spécifiée
@@ -418,7 +434,7 @@
             const $ = id => document.getElementById(id);
             const values = {
                 nomProjet: $("NomProjet").value,
-                dateDuJour: $("DateDuJour").value, // Nouvelle date du jour
+                dateDuJour: $("DateDuJour").value, 
                 metierCCQ: $("MetierCCQ").value,
                 echeanceCCQ: $("EcheanceCCQ").value,
                 nomTravailleur: $("NomTravailleur").value,
@@ -427,8 +443,8 @@
                 tel2: $("Telephone2").value,
                 tel3: $("Telephone3").value,
                 contactUrgence: $("ContactUrgence").value,
-                rss: $("Rss").value === 'Oui',
-                santePb: $("SantePb").value === 'Oui',
+                rss: $("Rss").value === 'Oui', // Renvoie true/false
+                santePb: $("SantePb").value === 'Oui', // Renvoie true/false
                 santeDetails: $("SanteDetails").value,
                 
                 formations: {
@@ -463,7 +479,6 @@
         function resizeCanvas() {
             // S'assurer que le canvas prend toute la largeur disponible dans son parent
             canvas.width = canvas.offsetWidth;
-            // MODIFIÉ ICI pour la hauteur du canvas dans la page
             canvas.height = 120; // Nouvelle hauteur fixe pour plus d'espace 
             ctx.fillStyle = "#f8fafc"; 
             ctx.fillRect(0, 0, canvas.width, canvas.height); 
@@ -629,9 +644,10 @@
             setText(form, map.tel3, v.tel3);
             setText(form, map.contactUrgence, v.contactUrgence);
 
-            // Remplissage des sélecteurs Oui/Non (qui sont des champs de texte dans le PDF)
-            setText(form, map.rss, v.rss ? 'Oui' : 'Non');
-            setText(form, map.sante_pb, v.santePb ? 'Oui' : 'Non'); // Utilise la valeur du select SantePb
+            // Remplissage des sélecteurs Oui/Non (qui sont des groupes radio dans le PDF)
+            // Utilisez la fonction setRadio pour les champs de type radio
+            setRadio(form, map.rss, v.rss ? 'Oui' : 'Non'); // La valeur 'Oui' ou 'Non' sera l'export value du bouton radio
+            setRadio(form, map.sante_pb, v.santePb ? 'Oui' : 'Non'); // La valeur 'Oui' ou 'Non' sera l'export value du bouton radio
             setText(form, map.sante_details, v.santeDetails);
 
             // Remplissage des cases à cocher pour les formations
