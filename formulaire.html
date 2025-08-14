@@ -160,15 +160,15 @@
                 </div>
                 <!-- REMPLACÉ PAR LA DATE DU JOUR -->
                 <div>
-                    <label for="DateDuJour">Date du jour <span class="required-asterisk">*</span></label>
-                    <input id="DateDuJour" type="date" />
+                    <label for="DateDuJour">Date du jour</label>
+                    <input id="DateDuJour" type="date" readonly /> <!-- Maintenant en lecture seule -->
                 </div>
                 <div>
-                    <label for="MetierCCQ">Métier CCQ</label>
+                    <label for="MetierCCQ">Métier CCQ <span class="required-asterisk">*</span></label>
                     <input id="MetierCCQ" />
                 </div>
                 <div>
-                    <label for="EcheanceCCQ">Échéance carte CCQ</label>
+                    <label for="EcheanceCCQ">Échéance carte CCQ <span class="required-asterisk">*</span></label>
                     <input id="EcheanceCCQ" type="date" />
                 </div>
                 <div>
@@ -176,11 +176,11 @@
                     <input id="NomTravailleur" />
                 </div>
                 <div>
-                    <label for="Entreprise">Entreprise</label>
+                    <label for="Entreprise">Entreprise <span class="required-asterisk">*</span></label>
                     <input id="Entreprise" />
                 </div>
                 <div>
-                    <label for="Telephone">Téléphone (principal)</label>
+                    <label for="Telephone">Téléphone (principal) <span class="required-asterisk">*</span></label>
                     <input id="Telephone" type="tel" />
                 </div>
                 <div>
@@ -200,7 +200,7 @@
             <!-- Section RSS -->
             <div class="section">
                 <div class="inline">
-                    <label for="Rss">Êtes‑vous intéressé à être RSS ?</label>
+                    <label for="Rss">Êtes‑vous intéressé à être RSS ? <span class="required-asterisk">*</span></label>
                     <select id="Rss"><option value="Non">Non</option><option value="Oui">Oui</option></select>
                 </div>
             </div>
@@ -227,7 +227,7 @@
 
             <!-- Section Formations du travailleur (réintégrée) -->
             <div class="section">
-                <h3>FORMATIONS DU TRAVAILLEUR</h3>
+                <h3>FORMATIONS DU TRAVAILLEUR <span class="required-asterisk">*</span></h3>
                 <div class="checkboxes">
                     <label><input type="checkbox" id="Cadenassage"> Cadenassage</label>
                     <label><input type="checkbox" id="Amiante"> Amiante / silice</label>
@@ -587,27 +587,64 @@
         async function buildPdf({ flatten = false, preview = false, share = false } = {}) {
             const v = readFormValues(); 
 
-            // Vérifie si la signature a été dessinée
+            // VALIDATIONS DES CHAMPS OBLIGATOIRES
+            if (!v.nomProjet) {
+                alert("Veuillez remplir le 'Nom du projet'.");
+                return;
+            }
+            // Date du jour est en lecture seule, donc toujours remplie.
+            // if (!v.dateDuJour) {
+            //     alert("Veuillez renseigner la 'Date du jour'.");
+            //     return;
+            // }
+            if (!v.metierCCQ) {
+                alert("Veuillez remplir le 'Métier CCQ'.");
+                return;
+            }
+            if (!v.echeanceCCQ) {
+                alert("Veuillez renseigner l''Échéance carte CCQ'.");
+                return;
+            }
+            if (!v.nomTravailleur) {
+                alert("Veuillez remplir le 'Prénom et Nom'.");
+                return;
+            }
+            if (!v.entreprise) {
+                alert("Veuillez remplir l''Entreprise'.");
+                return;
+            }
+            if (!v.tel1) {
+                alert("Veuillez remplir le 'Téléphone (principal)'.");
+                return;
+            }
+            // Vérification des sélecteurs (RSS et Santé)
+            // Comme ils ont des options par défaut (Non), on vérifie simplement que l'option a été choisie,
+            // ou qu'ils sont 'Oui' si c'est obligatoire d'interagir.
+            // Ici, on considère que le simple fait d'être présent dans le formulaire les rend "remplis".
+            // Si vous voulez forcer l'utilisateur à changer de "Non" à "Oui" ou inversement, une logique plus complexe est nécessaire.
+
+            if (v.santePb && !v.santeDetails) { // Si "Problème de santé" est "Oui", "Précisez" est obligatoire
+                alert("Veuillez préciser votre problème de santé.");
+                return;
+            }
+            
+            // Validation des cases à cocher "FORMATIONS DU TRAVAILLEUR" (au minimum une)
+            const hasAnyFormationChecked = Object.values(v.formations).some(isChecked => isChecked);
+            if (!hasAnyFormationChecked) {
+                alert("Veuillez cocher au moins une case dans la section 'FORMATIONS DU TRAVAILLEUR'.");
+                return;
+            }
+
             if (!v.signatureData) {
                 alert("Veuillez dessiner votre signature avant de générer le PDF.");
                 return; 
             }
-            // Vérifie si le nom du travailleur est rempli en bas
-            if (!v.travailleurNomFinal) {
-                alert("Veuillez remplir le 'Prénom et Nom' en haut du formulaire.");
-                return;
-            }
-            // Vérifie si la date finale est remplie en bas
-            if (!v.dateFinale) {
-                alert("La date du jour n'a pas été renseignée.");
-                return;
-            }
-            // Vérifie la case d'engagement
             if (!v.engagement) {
                 alert("Veuillez cocher la case d'engagement avant de générer le PDF.");
                 return;
             }
-
+            // Fin des validations
+            
 
             const pdf = await loadTemplate(); 
             const form = pdf.getForm(); 
@@ -672,10 +709,10 @@
                 const lastPage = pages[pages.length - 1];
                 
                 // Coordonnées de la signature (en points)
-                const signatureX = 85 * 2.835; // 75 mm du bord gauche
-                const signatureY = 40 * 2.835; // 38 mm du bas de la feuille
+                const signatureX = 85 * 2.835; // 90 mm du bord gauche
+                const signatureY = 39 * 2.835; // 38 mm du bas de la feuille
 
-                const scaleFactor = 1.05; // 5% plus grand
+                const scaleFactor = 1.05; // 30% plus grand
                 const baseWidth = 130; // Ajustez cette valeur pour contrôler la largeur de base de la signature
 
                 const signatureWidth = baseWidth * scaleFactor;
