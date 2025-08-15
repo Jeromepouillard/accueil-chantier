@@ -408,7 +408,7 @@
             Engagement: ["Case à cocher24","ENGAGEMENT DU TRAVAILLEUR","Engagement"],
 
             // Champs pour le bas du formulaire (seront mis à jour automatiquement via JS)
-            travailleurNomFinal: ["Travailleur Prénom et Nom en lettres moulées", "Nom et Prénom", "Nom Prenom"], 
+            travailleurNomFinal: ["Travailleur  Prénom et Nom en lettres moulées"], 
             dateFinale: ["Date27_es_:signer:date", "Date"], 
         };
 
@@ -575,7 +575,8 @@
 
         // Synchronisation automatique des champs
         document.getElementById('NomTravailleur').addEventListener('input', (event) => {
-            document.getElementById('TravailleurNomFinal').value = event.target.value;
+            // Convertit la valeur en majuscules avant de l'assigner au champ du bas
+            document.getElementById('TravailleurNomFinal').value = event.target.value.toUpperCase();
         });
 
         document.getElementById('DateDuJour').addEventListener('input', (event) => {
