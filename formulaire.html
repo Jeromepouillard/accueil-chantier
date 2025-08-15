@@ -143,10 +143,9 @@
         <header>
             <img src="assets/logo-prdesjardins.png" alt="P+R Desjardins"/>
             <div>
-                <h1>Accueil des travailleurs — Générateur PDF éditable</h1>
+                <h1>Accueil des travailleurs — Formulaire PDF </h1>
                 <small class="muted">
-                    Place le PDF modèle à <code>/assets/accueil_travailleurs.pdf</code> (ton original renommé).
-                    Rien à payer, tout dans le navigateur.
+                    Veuillez remplir les champs obligatoires. P+R Desjardins vous remercie.
                 </small>
             </div>
         </header>
@@ -180,12 +179,8 @@
                     <input id="Entreprise" />
                 </div>
                 <div>
-                    <label for="Telephone">Téléphone (principal) <span class="required-asterisk">*</span></label>
+                    <label for="Telephone">Téléphone (votre cellulaire) <span class="required-asterisk">*</span></label>
                     <input id="Telephone" type="tel" />
-                </div>
-                <div>
-                    <label for="Telephone2">Téléphone (secondaire)</label>
-                    <input id="Telephone2" type="tel" />
                 </div>
                 <div>
                     <label for="Telephone3">Téléphone (contact d'urgence)</label>
@@ -200,7 +195,7 @@
             <!-- Section RSS -->
             <div class="section">
                 <div class="inline">
-                    <label for="Rss">Êtes‑vous intéressé à être RSS ? <span class="required-asterisk">*</span></label>
+                    <label for="Rss">Êtes‑vous intéressé à être RSS à temps partiel ? <span class="required-asterisk">*</span></label>
                     <select id="Rss"><option value="Non">Non</option><option value="Oui">Oui</option></select>
                 </div>
             </div>
@@ -315,8 +310,6 @@
             <!-- Boutons d'action pour le PDF -->
             <div class="btns">
                 <button class="primary" id="btnGen">Générer le PDF (éditable)</button>
-                <button id="btnGenFlatten">Générer (aplati pour impression)</button>
-                <button id="btnPreview">Prévisualiser dans le navigateur</button>
                 <button id="btnShare">Partager (mobile)</button>
             </div>
             <small class="muted">
@@ -384,7 +377,6 @@
             nomTravailleur: ["NomTravailleur","Travailleur Prénom et Nom en lettres moulées","Prénom et Nom"],
             entreprise: ["Entreprise"],
             tel1: ["Téléphone","Telephone"],
-            tel2: ["Téléphone_2","Telephone_2"],
             tel3: ["Téléphone_3","Telephone_3"],
             contactUrgence: ["Contact durgence","Contact d'urgence","Contact urgence"],
 
@@ -678,7 +670,6 @@
             setText(form, map.nomTravailleur, v.nomTravailleur);
             setText(form, map.entreprise, v.entreprise);
             setText(form, map.tel1, v.tel1);
-            setText(form, map.tel2, v.tel2);
             setText(form, map.tel3, v.tel3);
             setText(form, map.contactUrgence, v.contactUrgence);
 
@@ -765,8 +756,6 @@
 
         // Ajout des écouteurs d'événements aux boutons
         document.getElementById('btnGen').addEventListener('click', () => buildPdf({ flatten: false }));
-        document.getElementById('btnGenFlatten').addEventListener('click', () => buildPdf({ flatten: true }));
-        document.getElementById('btnPreview').addEventListener('click', () => buildPdf({ preview: true }));
         document.getElementById('btnShare').addEventListener('click', () => buildPdf({ share: true }));
     </script>
 </body>
