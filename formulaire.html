@@ -400,7 +400,7 @@
             Engagement: ["Case à cocher24","ENGAGEMENT DU TRAVAILLEUR","Engagement"],
 
             // Champs pour le bas du formulaire (seront mis à jour automatiquement via JS)
-            travailleurNomFinal: ["Travailleur  Prénom et Nom en lettres moulées"], 
+            travailleurNomFinal: ["Travailleur Prénom et Nom en lettres moulées"], 
             dateFinale: ["Date27_es_:signer:date", "Date"], 
         };
 
@@ -425,7 +425,7 @@
                 nomTravailleur: $("NomTravailleur").value,
                 entreprise: $("Entreprise").value,
                 tel1: $("Telephone").value,
-                tel2: $("Telephone2").value,
+                // tel2: $("Telephone2") ? $("Telephone2").value : '', // Removed, as it's no longer in HTML
                 tel3: $("Telephone3").value,
                 contactUrgence: $("ContactUrgence").value,
                 rss: $("Rss").value === 'Oui', // Renvoie true/false
@@ -475,22 +475,69 @@
         }
 
         // Redimensionne le canvas au chargement et lors du redimensionnement de la fenêtre
-        window.addEventListener('load', resizeCanvas);
-        window.addEventListener('resize', resizeCanvas);
+        window.addEventListener('load', () => { // All listeners moved inside here
+            resizeCanvas(); 
 
-        canvas.addEventListener('mousedown', startDrawing);
-        canvas.addEventListener('mouseup', stopDrawing);
-        canvas.addEventListener('mousemove', draw);
-        // Support tactile
-        canvas.addEventListener('touchstart', (e) => {
-            e.preventDefault(); 
-            startDrawing(e.touches[0]);
-        });
-        canvas.addEventListener('touchend', stopDrawing);
-        canvas.addEventListener('touchmove', (e) => {
-            e.preventDefault(); 
-            draw(e.touches[0]);
-        });
+            // Tente de pré-remplir le nom du travailleur si sauvegardé
+            const nomTravailleurInput = document.getElementById('NomTravailleur');
+            const lastTravailleurName = localStorage.getItem('lastTravailleurName');
+            if (lastTravailleurName) {
+                nomTravailleurInput.value = lastTravailleurName;
+                nomTravailleurInput.dispatchEvent(new Event('input')); // Déclenche l'événement pour copier le nom
+            }
+
+            // Synchronisation automatique des champs
+            document.getElementById('NomTravailleur').addEventListener('input', (event) => {
+                // Convertit la valeur en majuscules avant de l'assigner au champ du bas
+                document.getElementById('TravailleurNomFinal').value = event.target.value.toUpperCase();
+            });
+
+            document.getElementById('DateDuJour').addEventListener('input', (event) => {
+                document.getElementById('DateFinale').value = event.target.value;
+            });
+
+            // Ajout des écouteurs d'événements aux boutons
+            document.getElementById('btnGen').addEventListener('click', () => buildPdf({ flatten: false }));
+            // document.getElementById('btnGenFlatten').addEventListener('click', () => buildPdf({ flatten: true })); // Retire le bouton aplati
+            document.getElementById('btnPreview').addEventListener('click', () => buildPdf({ preview: true }));
+            document.getElementById('btnShare').addEventListener('click', () => buildPdf({ share: true }));
+
+            // Initialise les listeners pour le canvas de signature (déplacés ici)
+            const canvasElement = document.getElementById('signatureCanvas');
+            const clearSignatureButton = document.getElementById('clearSignature');
+
+            if (canvasElement) { // Safety check
+                canvasElement.addEventListener('mousedown', startDrawing);
+                canvasElement.addEventListener('mouseup', stopDrawing);
+                canvasElement.addEventListener('mousemove', draw);
+                // Support tactile
+                canvasElement.addEventListener('touchstart', (e) => {
+                    e.preventDefault(); 
+                    startDrawing(e.touches[0]);
+                });
+                canvasElement.addEventListener('touchend', stopDrawing);
+                canvasElement.addEventListener('touchmove', (e) => {
+                    e.preventDefault(); 
+                    draw(e.touches[0]);
+                });
+            } else {
+                console.error("Erreur: L'élément signatureCanvas n'a pas été trouvé.");
+            }
+            
+            if (clearSignatureButton) { // Safety check
+                clearSignatureButton.addEventListener('click', () => {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    // IMPORTANT : Remplir le fond avec une couleur ici pour le rendre visible sur la page HTML
+                    ctx.fillStyle = "#f8fafc"; 
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                });
+            } else {
+                console.error("Erreur: Le bouton clearSignature n'a pas été trouvé.");
+            }
+        }); // End of window.addEventListener('load')
+
+        window.addEventListener('resize', resizeCanvas); // resizeCanvas still outside, it's fine.
+
 
         function startDrawing(e) {
             drawing = true;
@@ -514,13 +561,6 @@
             drawing = false;
         }
 
-        document.getElementById('clearSignature').addEventListener('click', () => {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            // IMPORTANT : Remplir le fond avec une couleur ici pour le rendre visible sur la page HTML
-            ctx.fillStyle = "#f8fafc"; 
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-        });
-
         // Fonction pour récupérer les données de la signature (image)
         function getSignatureData() {
             // Vérifie si le canvas a été dessiné (non vide) en regardant si des pixels non-transparent ont été dessinés.
@@ -542,39 +582,14 @@
             return null; 
         }
 
-        // Pré-remplir la date du jour pour "DateDuJour" et copier dans "DateFinale"
-        window.addEventListener('load', () => {
-            const today = new Date();
-            const year = today.getFullYear();
-            const month = String(today.getMonth() + 1).padStart(2, '0');
-            const day = String(today.getDate()).padStart(2, '0');
-            const formattedDate = `${year}-${month}-${day}`;
-            
-            const dateDuJourInput = document.getElementById('DateDuJour');
-            dateDuJourInput.value = formattedDate;
-            dateDuJourInput.dispatchEvent(new Event('input')); // Déclenche l'événement pour copier la date
-
-            resizeCanvas(); 
-
-            // Tente de pré-remplir le nom du travailleur si sauvegardé
-            const nomTravailleurInput = document.getElementById('NomTravailleur');
-            const lastTravailleurName = localStorage.getItem('lastTravailleurName');
-            if (lastTravailleurName) {
-                nomTravailleurInput.value = lastTravailleurName;
-                nomTravailleurInput.dispatchEvent(new Event('input')); // Déclenche l'événement pour copier le nom
-            }
-        });
-
-        // Synchronisation automatique des champs
-        document.getElementById('NomTravailleur').addEventListener('input', (event) => {
-            // Convertit la valeur en majuscules avant de l'assigner au champ du bas
-            document.getElementById('TravailleurNomFinal').value = event.target.value.toUpperCase();
-        });
-
-        document.getElementById('DateDuJour').addEventListener('input', (event) => {
-            document.getElementById('DateFinale').value = event.target.value;
-        });
-
+        // Nouvelle fonction utilitaire pour formater les dates sans décalage horaire
+        function formatDateForPdf(dateString) {
+            if (!dateString) return '';
+            const [year, month, day] = dateString.split('-').map(Number);
+            // Crée une date dans le fuseau horaire LOCAL (minuit du jour spécifié)
+            const d = new Date(year, month - 1, day); 
+            return `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
+        }
 
         // Fonction principale pour construire le PDF
         async function buildPdf({ flatten = false, preview = false, share = false } = {}) {
@@ -607,18 +622,28 @@
                 return;
             }
             if (!v.tel1) {
-                alert("Veuillez remplir le 'Téléphone (principal)'.");
+                alert("Veuillez remplir le 'Téléphone (votre cellulaire)'.");
                 return;
             }
+            
             // Vérification des sélecteurs (RSS et Santé)
-            // Comme ils ont des options par défaut (Non), on vérifie simplement que l'option a été choisie,
-            // ou qu'ils sont 'Oui' si c'est obligatoire d'interagir.
-            // Ici, on considère que le simple fait d'être présent dans le formulaire les rend "remplis".
-            // Si vous voulez forcer l'utilisateur à changer de "Non" à "Oui" ou inversement, une logique plus complexe est nécessaire.
+            // Pour 'Êtes-vous intéressé à être RSS ?', nous considérons qu'il est rempli
+            // tant que l'une des options par défaut (Oui/Non) est sélectionnée.
+            // Si le PDF attend un choix explicite, la validation serait plus complexe.
+            // Ici, l'existence d'une valeur (Oui ou Non) est suffisante.
+            if (v.rss === null) { // Si pour une raison quelconque la valeur n'est pas "Oui" ou "Non"
+                 alert("Veuillez indiquer si vous êtes intéressé à être RSS.");
+                 return;
+            }
 
             if (v.santePb && !v.santeDetails) { // Si "Problème de santé" est "Oui", "Précisez" est obligatoire
                 alert("Veuillez préciser votre problème de santé.");
                 return;
+            }
+            // 'Avez-vous un problème de santé' est obligatoire
+            if (v.santePb === null) { // Si pour une raison quelconque la valeur n'est pas "Oui" ou "Non"
+                 alert("Veuillez indiquer si vous avez un problème de santé.");
+                 return;
             }
             
             // Validation des cases à cocher "FORMATIONS DU TRAVAILLEUR" (au minimum une)
@@ -655,26 +680,23 @@
 
             // Remplissage des champs de texte
             setText(form, map.nomProjet, v.nomProjet);
-            // Conversion de la date (YYYY-MM-DD en DD/MM/YYYY) pour le champ Date du jour en haut
-            const dateDuJourValue = v.dateDuJour ? new Date(v.dateDuJour) : null;
-            const dateDuJourStr = dateDuJourValue ? `${String(dateDuJourValue.getDate()).padStart(2,'0')}/${String(dateDuJourValue.getMonth()+1).padStart(2,'0')}/${dateDuJourValue.getFullYear()}` : '';
-            setText(form, map.dateDuJour, dateDuJourStr); 
+            setText(form, map.dateDuJour, formatDateForPdf(v.dateDuJour)); 
 
             setText(form, map.metierCCQ, v.metierCCQ);
             
             // Conversion de la date (YYYY-MM-DD en DD/MM/YYYY)
-            const d = v.echeanceCCQ ? new Date(v.echeanceCCQ) : null;
-            const dStr = d ? `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}` : '';
-            setText(form, map.echeanceCCQ, dStr);
+            setText(form, map.echeanceCCQ, formatDateForPdf(v.echeanceCCQ));
 
             setText(form, map.nomTravailleur, v.nomTravailleur);
             setText(form, map.entreprise, v.entreprise);
             setText(form, map.tel1, v.tel1);
+            // NOTE : tel2 n'est plus dans le formulaire HTML, vérifier si nécessaire pour le PDF
+            // Si tel2 est un champ PDF, il pourrait rester ici et se remplir avec une chaîne vide si non présent dans HTML
+            // setText(form, map.tel2, v.tel2); 
             setText(form, map.tel3, v.tel3);
             setText(form, map.contactUrgence, v.contactUrgence);
 
             // Remplissage des sélecteurs Oui/Non (qui sont des groupes radio dans le PDF)
-            // Utilisez la fonction setRadio pour les champs de type radio
             setRadio(form, map.rss, v.rss ? 'Oui' : 'Non'); // La valeur 'Oui' ou 'Non' sera l'export value du bouton radio
             setRadio(form, map.sante_pb, v.santePb ? 'Oui' : 'Non'); // La valeur 'Oui' ou 'Non' sera l'export value du bouton radio
             setText(form, map.sante_details, v.santeDetails);
@@ -691,9 +713,7 @@
             setText(form, map.travailleurNomFinal, v.travailleurNomFinal);
             
             // Remplissage de la date finale avec la valeur du champ du haut
-            const dateFinaleValue = v.dateFinale ? new Date(v.dateFinale) : null;
-            const dateFinaleStr = dateFinaleValue ? `${String(dateFinaleValue.getDate()).padStart(2,'0')}/${String(dateFinaleValue.getMonth()+1).padStart(2,'0')}/${dateFinaleValue.getFullYear()}` : '';
-            setText(form, map.dateFinale, dateFinaleStr); 
+            setText(form, map.dateFinale, formatDateForPdf(v.dateFinale)); 
 
             // GESTION DE LA SIGNATURE DESSINÉE
             try {
@@ -753,10 +773,6 @@
                 URL.revokeObjectURL(url);
             }
         }
-
-        // Ajout des écouteurs d'événements aux boutons
-        document.getElementById('btnGen').addEventListener('click', () => buildPdf({ flatten: false }));
-        document.getElementById('btnShare').addEventListener('click', () => buildPdf({ share: true }));
     </script>
 </body>
 </html>
