@@ -1,736 +1,697 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Accueil Chantier – Remplissage PDF </title>
-    <style>
-        /* Styles généraux pour l'ensemble du corps du document */
-        :root { --brand:#0f172a; --accent:#0ea5e9; --muted:#e5e7eb; }
-        * { box-sizing:border-box }
-        html { height:100%; } /* S'assurer que html prend toute la hauteur */
-        body{
-            min-height:100vh; /* S'assurer que body prend au moins toute la hauteur du viewport */
-            margin:0;
-            font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-            color:var(--brand);
-            /* Ajout du fond nid d'abeille ici */
-            background: #fff url("assets/bg-honeycomb.png") center/340px repeat;
-            padding:24px; /* Garder le padding autour de la carte */
-            overflow-y: auto; /* Permettre le défilement vertical si le contenu dépasse */
-            display: block; /* Assurer que body se comporte comme un bloc */
-        }
-        
-        /* Styles de la carte principale qui contient le formulaire */
-        .card{
-            width:100%;
-            max-width:900px;
-            /* La carte doit être légèrement transparente pour voir l'arrière-plan */
-            background: rgba(255,255,255,0.9); 
-            backdrop-filter: saturate(120%) blur(2px); /* Effet de flou pour le fond */
-            border:1px solid var(--muted);
-            border-radius:16px;
-            padding:24px;
-            box-shadow:0 10px 30px rgba(2,8,23,.06);
-            /* Min-height pour s'assurer qu'elle prend de la place, même avec peu de contenu */
-            min-height: 200px; 
-            margin: 0 auto; /* Centre la carte horizontalement */
-        }
-        
-        /* Styles de l'en-tête de la carte (logo et titre) */
-        header { 
-            display: flex; 
-            flex-direction: column; /* Empile les éléments (logo et div de texte) verticalement */
-            align-items: center; /* Centre les éléments horizontalement dans l'en-tête */
-            gap: 8px; /* Réduit l'espace entre le logo et le texte */
-            margin-bottom: 12px; 
-            text-align: center; /* Centre le texte à l'intérieur du div si nécessaire */
-        }
-        header img {
-            /* Rendre le logo responsive */
-            max-height: 40px; /* Hauteur maximale par défaut */
-            max-width: 100%; /* S'assure que le logo ne dépasse pas la largeur du conteneur */
-            height: auto; /* Maintient les proportions */
-            width: auto; /* La largeur s'adapte automatiquement */
-        }
-        /* Media query pour les petits écrans (téléphones) */
-        @media (max-width: 480px) {
-            header img {
-                max-height: 32px; /* Réduit la taille du logo sur les petits écrans */
-            }
-        }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Accueil Chantier – Remplissage PDF </title>
+    <style>
+        /* Styles généraux pour l'ensemble du corps du document */
+        :root { --brand:#0f172a; --accent:#0ea5e9; --muted:#e5e7eb; }
+        * { box-sizing:border-box }
+        html { height:100%; }
+        body{
+            min-height:100vh;
+            margin:0;
+            font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+            color:var(--brand);
+            background: #fff url("assets/bg-honeycomb.png") center/340px repeat;
+            padding:24px;
+            overflow-y: auto;
+            display: block;
+        }
+        
+        /* Styles de la carte principale qui contient le formulaire */
+        .card{
+            width:100%;
+            max-width:900px;
+            background: rgba(255,255,255,0.9); 
+            backdrop-filter: saturate(120%) blur(2px);
+            border:1px solid var(--muted);
+            border-radius:16px;
+            padding:24px;
+            box-shadow:0 10px 30px rgba(2,8,23,.06);
+            min-height: 200px; 
+            margin: 0 auto;
+        }
+        
+        /* Styles de l'en-tête de la carte (logo et titre) */
+        header { 
+            display: flex; 
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px; 
+            text-align: center;
+        }
+        header img {
+            max-height: 40px;
+            max-width: 100%;
+            height: auto;
+            width: auto;
+        }
+        /* Media query pour les petits écrans (téléphones) */
+        @media (max-width: 480px) {
+            header img {
+                max-height: 32px;
+            }
+        }
 
-        h1{font-size:clamp(20px,3.8vw,28px);margin:8px 0}
-        
-        /* Styles pour la disposition des éléments de formulaire en grille */
-        .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
-        
-        /* Styles des étiquettes de formulaire */
-        label{font-weight:600;font-size:14px}
-        
-        /* Styles des champs de saisie, textarea et select */
-        input,textarea,select{width:100%;padding:10px;border:1px solid #cbd5e1;border-radius:8px}
-        
-        /* Styles pour les lignes (par ex. pour les sélecteurs Oui/Non) */
-        .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-        
-        /* Styles pour les groupes de cases à cocher */
-        .checkboxes{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:8px}
+        h1{font-size:clamp(20px,3.8vw,28px);margin:8px 0}
+        
+        /* Styles pour la disposition des éléments de formulaire en grille */
+        .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+        
+        /* Styles des étiquettes de formulaire */
+        label{font-weight:600;font-size:14px}
+        
+        /* Styles des champs de saisie, textarea et select */
+        input,textarea,select{width:100%;padding:10px;border:1px solid #cbd5e1;border-radius:8px}
+        
+        /* Styles pour les lignes (par ex. pour les sélecteurs Oui/Non) */
+        .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+        
+        /* Styles pour les groupes de cases à cocher */
+        .checkboxes{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:8px}
 
-        /* NOUVEAUX STYLES POUR LES LABELS CONTENANT DES CASES À COCHER */
-        .checkboxes label, /* Pour les labels à l'intérieur de la section "checkboxes" */
-        .inline label:has(input[type="checkbox"]) { /* Pour les labels dans un .inline qui contiennent une checkbox */
-            display: flex; /* Utilise flexbox pour aligner l'input et le texte */
-            align-items: center; /* Centre verticalement l'input et le texte */
-            font-weight: normal; /* Le texte des labels de checkbox n'a pas besoin d'être gras par défaut */
-            font-size: 1rem; /* Taille de police standard pour le texte des checkboxes */
-        }
-        .checkboxes label input[type="checkbox"],
-        .inline label input[type="checkbox"] { /* S'assure que les inputs de type checkbox ont une marge cohérente */
-            width: auto; /* La largeur est gérée par le navigateur */
-            margin-right: 8px; /* Ajoute un petit espace entre la checkbox et le texte */
-        }
-        
-        /* Styles pour les sections du formulaire */
-        .section{border-top:1px solid var(--muted);margin-top:16px;padding-top:16px}
-        
-        /* Styles du conteneur des boutons d'action */
-        .btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
-        
-        /* Styles des boutons */
-        button{appearance:none;border:1px solid #cbd5e1;background:#f8fafc;padding:12px 14px;border-radius:10px;font-weight:700;cursor:pointer}
-        button.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
-        button:active{transform:translateY(1px)}
-        
-        /* Styles pour le texte "muted" (petits messages d'information) */
-        small.muted{display:block;margin-top:6px;color:#64748b}
-        
-        /* Styles pour les éléments alignés en ligne (par ex. label + select) */
-        .inline{display:flex;align-items:center;gap:10px}
+        /* NOUVEAUX STYLES POUR LES LABELS CONTENANT DES CASES À COCHER */
+        .checkboxes label,
+        .inline label:has(input[type="checkbox"]) {
+            display: flex;
+            align-items: center;
+            font-weight: normal;
+            font-size: 1rem;
+        }
+        .checkboxes label input[type="checkbox"],
+        .inline label input[type="checkbox"] {
+            width: auto;
+            margin-right: 8px;
+        }
+        
+        /* Styles pour les sections du formulaire */
+        .section{border-top:1px solid var(--muted);margin-top:16px;padding-top:16px}
+        
+        /* Styles du conteneur des boutons d'action */
+        .btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+        
+        /* Styles des boutons */
+        button{appearance:none;border:1px solid #cbd5e1;background:#f8fafc;padding:12px 14px;border-radius:10px;font-weight:700;cursor:pointer}
+        button.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+        button:active{transform:translateY(1px)}
+        
+        /* Styles pour le texte "muted" (petits messages d'information) */
+        small.muted{display:block;margin-top:6px;color:#64748b}
+        
+        /* Styles pour les éléments alignés en ligne (par ex. label + select) */
+        .inline{display:flex;align-items:center;gap:10px}
 
-        /* Styles spécifiques pour la zone de signature */
-        #signatureCanvas {
-            /* RÉ-APPLIQUÉ : */
-            border: 1px solid #cbd5e1; /* Re-ajoute la bordure */
-            background-color: #f8fafc; /* Re-ajoute la couleur de fond */
-            background-image: linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee), 
-                                linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee);
-            background-size: 20px 20px;
-            background-position: 0 0, 10px 10px;
-            
-            touch-action: none; /* Empêche le défilement lors du dessin */
-            position: relative; /* Pour positionner le texte d'instruction */
-            width: 100%; /* S'assure qu'il prend toute la largeur disponible de son parent */
-            height: 120px; /* Nouvelle hauteur fixe pour plus d'espace */
-        }
-        #signatureCanvas::after {
-            /* Le texte d'instruction est toujours caché car le fond est maintenant visible */
-            content: none; 
-        }
-        .signature-controls {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
+        /* Styles spécifiques pour la zone de signature */
+        #signatureCanvas {
+            border: 1px solid #cbd5e1;
+            background-color: #f8fafc;
+            background-image: linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee), 
+                                linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
+            touch-action: none;
+            position: relative;
+            width: 100%;
+            height: 120px;
+        }
+        #signatureCanvas::after {
+            content: none; 
+        }
+        .signature-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
 
-        .required-asterisk {
-            color: red;
-        }
-    </style>
+        .required-asterisk {
+            color: red;
+        }
+    </style>
 </head>
 <body>
-    <main class="card">
-        <header>
-            <img src="assets/logo-prdesjardins.png" alt="P+R Desjardins"/>
-            <div>
-                <h1>Accueil des travailleurs — Générateur PDF éditable</h1>
-                <small class="muted">
-                    Veuillez remplir les champs obligatoires. P+R Desjardins vous remercie.
-                </small>
-            </div>
-        </header>
+    <main class="card">
+        <header>
+            <img src="assets/logo-prdesjardins.png" alt="P+R Desjardins"/>
+            <div>
+                <h1>Accueil des travailleurs — Générateur PDF éditable</h1>
+                <small class="muted">
+                    Veuillez remplir les champs obligatoires. P+R Desjardins vous remercie.
+                </small>
+            </div>
+        </header>
 
-        <form id="form" onsubmit="return false;">
-            <!-- Section Informations du projet -->
-            <div class="grid">
-                <div>
-                    <label for="NomProjet">Nom du projet <span class="required-asterisk">*</span></label>
-                    <input id="NomProjet" placeholder="Ex: Tour XYZ" />
-                </div>
-                <!-- REMPLACÉ PAR LA DATE DU JOUR -->
-                <div>
-                    <label for="DateDuJour">Date du jour <span class="required-asterisk">*</span></label>
-                    <input id="DateDuJour" type="date" />
-                </div>
-                <div>
-                    <label for="MetierCCQ">Métier CCQ</label>
-                    <input id="MetierCCQ" />
-                </div>
-                <div>
-                    <label for="EcheanceCCQ">Échéance carte CCQ</label>
-                    <input id="EcheanceCCQ" type="date" />
-                </div>
-                <div>
-                    <label for="NomTravailleur">Prénom et Nom <span class="required-asterisk">*</span></label>
-                    <input id="NomTravailleur" />
-                </div>
-                <div>
-                    <label for="Entreprise">Entreprise</label>
-                    <input id="Entreprise" />
-                </div>
-                <div>
-                    <label for="Telephone">Téléphone (principal)</label>
-                    <input id="Telephone" type="tel" />
-                </div>
-                <div>
-                    <label for="Telephone2">Téléphone (secondaire)</label>
-                    <input id="Telephone2" type="tel" />
-                </div>
-                <div>
-                    <label for="Telephone3">Téléphone (contact d'urgence)</label>
-                    <input id="Telephone3" type="tel" />
-                </div>
-                <div>
-                    <label for="ContactUrgence">Nom du contact d'urgence</label>
-                    <input id="ContactUrgence" />
-                </div>
-            </div>
+        <form id="form" onsubmit="return false;">
+                        <div class="grid">
+                <div>
+                    <label for="NomProjet">Nom du projet <span class="required-asterisk">*</span></label>
+                    <input id="NomProjet" placeholder="Ex: Tour XYZ" required />
+                </div>
+                                <div>
+                    <label for="DateDuJour">Date du jour <span class="required-asterisk">*</span></label>
+                    <input id="DateDuJour" type="date" required />
+                </div>
+                <div>
+                    <label for="MetierCCQ">Métier CCQ <span class="required-asterisk">*</span></label>
+                    <input id="MetierCCQ" required />
+                </div>
+                <div>
+                    <label for="EcheanceCCQ">Échéance carte CCQ <span class="required-asterisk">*</span></label>
+                    <input id="EcheanceCCQ" type="date" required />
+                </div>
+                <div>
+                    <label for="NomTravailleur">Prénom et Nom <span class="required-asterisk">*</span></label>
+                    <input id="NomTravailleur" required />
+                </div>
+                <div>
+                    <label for="Entreprise">Entreprise <span class="required-asterisk">*</span></label>
+                    <input id="Entreprise" required />
+                </div>
+                <div>
+                    <label for="Telephone">Téléphone (principal) <span class="required-asterisk">*</span></label>
+                    <input id="Telephone" type="tel" required />
+                </div>
+                <div>
+                    <label for="Telephone3">Téléphone (contact d'urgence) <span class="required-asterisk">*</span></label>
+                    <input id="Telephone3" type="tel" required />
+                </div>
+                <div>
+                    <label for="ContactUrgence">Nom du contact d'urgence <span class="required-asterisk">*</span></label>
+                    <input id="ContactUrgence" required />
+                </div>
+            </div>
 
-            <!-- Section RSS -->
-            <div class="section">
-                <div class="inline">
-                    <label for="Rss">Êtes‑vous intéressé à être RSS ?</label>
-                    <select id="Rss"><option value="Non">Non</option><option value="Oui">Oui</option></select>
-                </div>
-            </div>
+                        <div class="section">
+                <div class="inline">
+                    <label for="Rss">Êtes‑vous intéressé à être RSS ? <span class="required-asterisk">*</span></label>
+                    <select id="Rss" required><option value="Non">Non</option><option value="Oui">Oui</option></select>
+                </div>
+            </div>
 
-            <!-- Nouvelle Section : OBLIGATIONS EN TOUT TEMPS -->
-            <div class="section">
-                <h3>OBLIGATIONS EN TOUT TEMPS</h3>
-                <p>
-                    <strong>TRAVAUX EN COLLABORATION AVEC P+R</strong><br>
-                    <strong>TOLÉRANCE ZÉRO</strong> En tout temps, les travaux doivent être exécutés de façon sécuritaire pour soi et pour tous les autres travailleurs présents sur le chantier, il est de la responsabilité de chacun de limiter au maximum les différents risques liés aux travaux. Poussière de silice cristalline - port d'appareil de protection respiratoire visage rasé OBLIGATOIRE, procédé humide ou captation à la source - Système de ventilation locale - isolation des postes de travail, Amiante suivre les recommandations selon le niveau de contamination, port des EPI équipements de protection individuels obligatoires, sécurité des machines, inspections obligatoires et s'assurer de la présence de dispositifs de sécurité.
-                </p>
-            </div>
+                        <div class="section">
+                <h3>OBLIGATIONS EN TOUT TEMPS</h3>
+                <p>
+                    <strong>TRAVAUX EN COLLABORATION AVEC P+R</strong><br>
+                    <strong>TOLÉRANCE ZÉRO</strong> En tout temps, les travaux doivent être exécutés de façon sécuritaire pour soi et pour tous les autres travailleurs présents sur le chantier, il est de la responsabilité de chacun de limiter au maximum les différents risques liés aux travaux. Poussière de silice cristalline - port d'appareil de protection respiratoire visage rasé OBLIGATOIRE, procédé humide ou captation à la source - Système de ventilation locale - isolation des postes de travail, Amiante suivre les recommandations selon le niveau de contamination, port des EPI équipements de protection individuels obligatoires, sécurité des machines, inspections obligatoires et s'assurer de la présence de dispositifs de sécurité.
+                </p>
+            </div>
 
-            <!-- Nouvelle Section : Santé -->
-            <div class="section">
-                <h3>SANTÉ</h3>
-                <div class="inline">
-                    <label for="SantePb">Avez-vous un problème de santé que nous devrions connaître? <span class="required-asterisk">*</span></label>
-                    <select id="SantePb"><option value="Non">Non</option><option value="Oui">Oui</option></select>
-                </div>
-                <label for="SanteDetails">Précisez (si Oui)</label>
-                <textarea id="SanteDetails" rows="2" placeholder="Asthme, allergie, etc."></textarea>
-            </div>
+                        <div class="section">
+                <h3>SANTÉ</h3>
+                <div class="inline">
+                    <label for="SantePb">Avez-vous un problème de santé que nous devrions connaître? <span class="required-asterisk">*</span></label>
+                    <select id="SantePb" required><option value="Non">Non</option><option value="Oui">Oui</option></select>
+                </div>
+                <label for="SanteDetails">Précisez (si Oui)</label>
+                <textarea id="SanteDetails" rows="2" placeholder="Asthme, allergie, etc."></textarea>
+            </div>
 
-            <!-- Section Formations du travailleur (réintégrée) -->
-            <div class="section">
-                <h3>FORMATIONS DU TRAVAILLEUR</h3>
-                <div class="checkboxes">
-                    <label><input type="checkbox" id="Cadenassage"> Cadenassage</label>
-                    <label><input type="checkbox" id="Amiante"> Amiante / silice</label>
-                    <label><input type="checkbox" id="EspaceClos"> Espace clos</label>
-                    <label><input type="checkbox" id="Secourisme"> Secourisme en milieu de travail</label>
-                    <label><input type="checkbox" id="Nacelle"> Nacelle</label>
-                    <label><input type="checkbox" id="ProtectionRespiratoire"> Protection respiratoire (Fit Test 2 ans)</label>
-                    <label><input type="checkbox" id="SIMDUT"> SIMDUT 2015 obligatoire</label>
-                    <label><input type="checkbox" id="Plateforme"> Plateforme élévatrice</label>
-                    <label><input type="checkbox" id="Autres"> Autres</label>
-                </div>
-            </div>
+                        <div class="section">
+                <h3>FORMATIONS DU TRAVAILLEUR <span class="required-asterisk">*</span></h3>
+                <div class="checkboxes" id="formationsCheckboxes">
+                    <label><input type="checkbox" id="Cadenassage"> Cadenassage</label>
+                    <label><input type="checkbox" id="Amiante"> Amiante / silice</label>
+                    <label><input type="checkbox" id="EspaceClos"> Espace clos</label>
+                    <label><input type="checkbox" id="Secourisme"> Secourisme en milieu de travail</label>
+                    <label><input type="checkbox" id="Nacelle"> Nacelle</label>
+                    <label><input type="checkbox" id="ProtectionRespiratoire"> Protection respiratoire (Fit Test 2 ans)</label>
+                    <label><input type="checkbox" id="SIMDUT"> SIMDUT 2015 obligatoire</label>
+                    <label><input type="checkbox" id="Plateforme"> Plateforme élévatrice</label>
+                    <label><input type="checkbox" id="Autres"> Autres</label>
+                </div>
+            </div>
 
-            <!-- Nouvelle Section : APPLICATION DES MESURES DISCIPLINAIRES -->
-            <div class="section">
-                <h3 style="color: #FF0000;">APPLICATION DES MESURES DISCIPLINAIRES *</h3>
-                <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
-                    <thead>
-                        <tr style="background-color: #f8fafc;">
-                            <th style="border: 1px solid #cbd5e1; padding: 8px; text-align: left; width: 25%;">Offense</th>
-                            <th style="border: 1px solid #cbd5e1; padding: 8px; text-align: left;">Mesure</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td style="border: 1px solid #cbd5e1; padding: 8px;">1<sup>ère</sup> offense</td>
-                            <td style="border: 1px solid #cbd5e1; padding: 8px;">Avertissement verbal</td>
-                        </tr>
-                        <tr>
-                            <td style="border: 1px solid #cbd5e1; padding: 8px;">2<sup>e</sup> offense</td>
-                            <td style="border: 1px solid #cbd5e1; padding: 8px;">Avertissement écrit</td>
-                        </tr>
-                        <tr>
-                            <td style="border: 1px solid #cbd5e1; padding: 8px;">3<sup>e</sup> offense</td>
-                            <td style="border: 1px solid #cbd5e1; padding: 8px;">Suspension de 2 jours où le travailleur ne pourra être présent sur le chantier et/ou renvoi du chantier pour toute la période des travaux.</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <p class="subtle" style="margin-top: 10px;">
-                    * Selon la gravité de l'offense à la Santé et la Sécurité, la suspension et/ou le renvoi du chantier pourront être appliqués immédiatement.
-                </p>
-            </div>
+                        <div class="section">
+                <h3 style="color: #FF0000;">APPLICATION DES MESURES DISCIPLINAIRES *</h3>
+                <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+                    <thead>
+                        <tr style="background-color: #f8fafc;">
+                            <th style="border: 1px solid #cbd5e1; padding: 8px; text-align: left; width: 25%;">Offense</th>
+                            <th style="border: 1px solid #cbd5e1; padding: 8px; text-align: left;">Mesure</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="border: 1px solid #cbd5e1; padding: 8px;">1<sup>ère</sup> offense</td>
+                            <td style="border: 1px solid #cbd5e1; padding: 8px;">Avertissement verbal</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #cbd5e1; padding: 8px;">2<sup>e</sup> offense</td>
+                            <td style="border: 1px solid #cbd5e1; padding: 8px;">Avertissement écrit</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #cbd5e1; padding: 8px;">3<sup>e</sup> offense</td>
+                            <td style="border: 1px solid #cbd5e1; padding: 8px;">Suspension de 2 jours où le travailleur ne pourra être présent sur le chantier et/ou renvoi du chantier pour toute la période des travaux.</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="subtle" style="margin-top: 10px;">
+                    * Selon la gravité de l'offense à la Santé et la Sécurité, la suspension et/ou le renvoi du chantier pourront être appliqués immédiatement.
+                </p>
+            </div>
 
-            <!-- Section Engagement du travailleur - MODIFIÉE -->
-            <div class="section">
-                <h3>ENGAGEMENT DU TRAVAILLEUR</h3>
-                <p class="subtle" style="margin-bottom: 10px;">
-                    Sur l'ensemble des chantiers, les règles de sécurité telles que décrites dans le Code de Santé et Sécurité pour les travaux de construction s'appliquent.
-                </p>
-                <p style="margin-bottom: 15px;">
-                    Je m'engage à prendre connaissance du programme de prévention de l'entrepreneur général applicable au chantier, des tolérances zéro de la CNESST et je m'engage à les respecter. Notamment, je m'engage à n'entreprendre aucun travail pour lesquels j'ai constaté un risque pour ma sécurité ou celle d'une autre personne et d'aviser dès que possible mon supérieur immédiat de tout risque constaté. Je m'engage également à ne pas effectuer ou opérer de machinerie sans avoir préalablement avoir reçu la formation concernant les risques spécifiques. J'ai été informé de la gradation des mesures disciplinaires, des consignes à suivre lors d'un accident de travail avec ou sans perte de temps et j'ai fait la visite du chantier.
-                </p>
-                <!-- Nouveau paragraphe pour le texte de confirmation de la case à cocher -->
-                <div class="inline" style="margin-top: 15px;">
-                    <label>
-                        <input type="checkbox" id="Engagement" /> 
-                        En cochant cette case, je confirme avoir lu l'entièreté du document et de mes engagements. <span class="required-asterisk">*</span>
-                    </label>
-                </div>
-            </div>
+                        <div class="section">
+                <h3>ENGAGEMENT DU TRAVAILLEUR</h3>
+                <p class="subtle" style="margin-bottom: 10px;">
+                    Sur l'ensemble des chantiers, les règles de sécurité telles que décrites dans le Code de Santé et Sécurité pour les travaux de construction s'appliquent.
+                </p>
+                <p style="margin-bottom: 15px;">
+                    Je m'engage à prendre connaissance du programme de prévention de l'entrepreneur général applicable au chantier, des tolérances zéro de la CNESST et je m'engage à les respecter. Notamment, je m'engage à n'entreprendre aucun travail pour lesquels j'ai constaté un risque pour ma sécurité ou celle d'une autre personne et d'aviser dès que possible mon supérieur immédiat de tout risque constaté. Je m'engage également à ne pas effectuer ou opérer de machinerie sans avoir préalablement avoir reçu la formation concernant les risques spécifiques. J'ai été informé de la gradation des mesures disciplinaires, des consignes à suivre lors d'un accident de travail avec ou sans perte de temps et j'ai fait la visite du chantier.
+                </p>
+                                <div class="inline" style="margin-top: 15px;">
+                    <label>
+                        <input type="checkbox" id="Engagement" required /> 
+                        En cochant cette case, je confirme avoir lu l'entièreté du document et de mes engagements. <span class="required-asterisk">*</span>
+                    </label>
+                </div>
+            </div>
 
-            <!-- Nouvelle Section : Bas du formulaire (Nom, Signature, Date) -->
-            <div class="section">
-                <div class="grid">
-                    <div>
-                        <label for="TravailleurNomFinal">Travailleur: (Prénom et Nom en lettres moulées)</label>
-                        <input id="TravailleurNomFinal" type="text" readonly /> <!-- Rendu en lecture seule -->
-                    </div>
-                    <div>
-                        <label for="DateFinale">Date</label>
-                        <input id="DateFinale" type="date" readonly /> <!-- Rendu en lecture seule -->
-                    </div>
-                </div>
+                        <div class="section">
+                <div class="grid">
+                    <div>
+                        <label for="TravailleurNomFinal">Travailleur: (Prénom et Nom en lettres moulées)</label>
+                        <input id="TravailleurNomFinal" type="text" readonly required />
+                    </div>
+                    <div>
+                        <label for="DateFinale">Date</label>
+                        <input id="DateFinale" type="date" readonly required />
+                    </div>
+                </div>
 
-                <div style="margin-top: 20px;">
-                    <label>Signature <span class="required-asterisk">*</span></label>
-                    <canvas id="signatureCanvas" width="400" height="100"></canvas>
-                    <div class="signature-controls">
-                        <button type="button" id="clearSignature">Effacer la signature</button>
-                    </div>
-                </div>
-                
-            </div>
+                <div style="margin-top: 20px;">
+                    <label>Signature <span class="required-asterisk">*</span></label>
+                    <canvas id="signatureCanvas" width="400" height="100"></canvas>
+                    <div class="signature-controls">
+                        <button type="button" id="clearSignature">Effacer la signature</button>
+                    </div>
+                </div>
+                
+            </div>
 
-            <!-- Boutons d'action pour le PDF -->
-            <div class="btns">
-                <button class="primary" id="btnGen">Générer le PDF (éditable)</button>
-                <button id="btnGenFlatten">Générer (aplati pour impression)</button>
-                <button id="btnPreview">Prévisualiser dans le navigateur</button>
-                <button id="btnShare">Partager (mobile)</button>
-            </div>
-            <small class="muted">
-                Si vous ne pouvez pas remplir le formulaire en pligne, veuillez en demander un papier au surintendant, merci.
-            </small>
-        </form>
-    </main>
+                        <div class="btns">
+                <button class="primary" id="btnGen">Générer le PDF (éditable)</button>
+                <button id="btnGenFlatten">Générer (aplati pour impression)</button>
+                <button id="btnPreview">Prévisualiser dans le navigateur</button>
+                <button id="btnShare">Partager (mobile)</button>
+            </div>
+            <small class="muted">
+                Si vous ne pouvez pas remplir le formulaire en pligne, veuillez en demander un papier au surintendant, merci.
+            </small>
+        </form>
+    </main>
 
-    <!-- Importation de la bibliothèque pdf-lib pour la manipulation de PDF -->
-    <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
-    <script>
-        // Utilitaires pour gérer les noms de champs PDF qui peuvent varier
-        // Permet de trouver un champ par plusieurs noms possibles
-        function getFieldByNames(form, names) {
-            // S'assure que 'names' est toujours un tableau
-            if (!Array.isArray(names)) {
-                console.error("getFieldByNames: 'names' n'est pas un tableau.", names);
-                return null;
-            }
-            for (const n of names) {
-                try { return form.getField(n); } catch(e) {}
-            }
-            return null; // Retourne null si aucun champ n'est trouvé avec les noms donnés
-        }
+        <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+    <script>
+        // Utilitaires pour gérer les noms de champs PDF qui peuvent varier
+        // Permet de trouver un champ par plusieurs noms possibles
+        function getFieldByNames(form, names) {
+            // S'assure que 'names' est toujours un tableau
+            if (!Array.isArray(names)) {
+                console.error("getFieldByNames: 'names' n'est pas un tableau.", names);
+                return null;
+            }
+            for (const n of names) {
+                try { return form.getField(n); } catch(e) {}
+            }
+            return null; // Retourne null si aucun champ n'est trouvé avec les noms donnés
+        }
 
-        // Définit le texte d'un champ PDF
-        function setText(form, names, value) {
-            const f = getFieldByNames(form, names);
-            if (f && f.setText) { f.setText(value ?? ''); } // Utilise la valeur ou une chaîne vide
-        }
+        // Définit le texte d'un champ PDF
+        function setText(form, names, value) {
+            const f = getFieldByNames(form, names);
+            if (f && f.setText) { f.setText(value ?? ''); } // Utilise la valeur ou une chaîne vide
+        }
+        // Coche ou décoche une case à cocher dans le PDF
+        function setCheck(form, names, checked) {
+            const f = getFieldByNames(form, names);
+            if (!f) return; // Ne fait rien si le champ n'est pas trouvé
+            try { checked ? f.check?.() : f.uncheck?.(); } catch(e) { /* Gère silencieusement les erreurs */ }
+        }
 
-        // Coche ou décoche une case à cocher dans le PDF
-        function setCheck(form, names, checked) {
-            const f = getFieldByNames(form, names);
-            if (!f) return; // Ne fait rien si le champ n'est pas trouvé
-            try { checked ? f.check?.() : f.uncheck?.(); } catch(e) { /* Gère silencieusement les erreurs */ }
-        }
+        // Définit la valeur d'un groupe de boutons radio dans le PDF
+        function setRadio(form, names, value) {
+            const f = getFieldByNames(form, names);
+            // Vérifie si le champ existe et possède la méthode 'select' (caractéristique d'un groupe radio)
+            if (f && typeof f.select === 'function') {
+                try {
+                    // pdf-lib's select method for radio groups takes the export value
+                    f.select(value);
+                } catch(e) {
+                    console.warn(`Erreur lors de la sélection du bouton radio pour le champ ${names.join('/')} avec la valeur '${value}':`, e);
+                }
+            } else {
+                console.warn(`Champ radio ${names.join('/')} non trouvé ou n'est pas un groupe radio.`);
+            }
+        }
 
-        // Définit la valeur d'un groupe de boutons radio dans le PDF
-        function setRadio(form, names, value) {
-            const f = getFieldByNames(form, names);
-            // Vérifie si le champ existe et possède la méthode 'select' (caractéristique d'un groupe radio)
-            if (f && typeof f.select === 'function') {
-                try {
-                    // pdf-lib's select method for radio groups takes the export value
-                    f.select(value);
-                } catch(e) {
-                    console.warn(`Erreur lors de la sélection du bouton radio pour le champ ${names.join('/')} avec la valeur '${value}':`, e);
-                }
-            } else {
-                console.warn(`Champ radio ${names.join('/')} non trouvé ou n'est pas un groupe radio.`);
-            }
-        }
+        // Mapping des IDs des éléments HTML avec les noms des champs PDF
+        // Cela permet de connecter facilement le formulaire HTML au PDF
+        const map = {
+            // En-tête du formulaire
+            nomProjet: ["NomProjet","Nom du projet","Nom Projet"],
+            dateDuJour: ["Date", "Date29_es_:signer:date"], 
+            metierCCQ: ["Métier CCQ","Metier CCQ"],
+            echeanceCCQ: ["Échéance Carte CCQ","Echeance Carte CCQ","Échéance carte CCQ"],
 
-        // Mapping des IDs des éléments HTML avec les noms des champs PDF
-        // Cela permet de connecter facilement le formulaire HTML au PDF
-        const map = {
-            // En-tête du formulaire
-            nomProjet: ["NomProjet","Nom du projet","Nom Projet"],
-            dateDuJour: ["Date", "Date29_es_:signer:date"], 
-            metierCCQ: ["Métier CCQ","Metier CCQ"],
-            echeanceCCQ: ["Échéance Carte CCQ","Echeance Carte CCQ","Échéance carte CCQ"],
+            // Coordonnées du travailleur
+            nomTravailleur: ["NomTravailleur","Travailleur Prénom et Nom en lettres moulées","Prénom et Nom"],
+            entreprise: ["Entreprise"],
+            tel1: ["Téléphone","Telephone"],
+            tel3: ["Téléphone_3","Telephone_3"],
+            contactUrgence: ["Contact durgence","Contact d'urgence","Contact urgence"],
 
-            // Coordonnées du travailleur
-            nomTravailleur: ["NomTravailleur","Travailleur Prénom et Nom en lettres moulées","Prénom et Nom"],
-            entreprise: ["Entreprise"],
-            tel1: ["Téléphone","Telephone"],
-            tel2: ["Téléphone_2","Telephone_2"],
-            tel3: ["Téléphone_3","Telephone_3"],
-            contactUrgence: ["Contact durgence","Contact d'urgence","Contact urgence"],
+            // Choix Oui/Non (qui sont des groupes radio dans le PDF original)
+            rss: ["Rss"], // Nom du groupe radio pour RSS dans le PDF
+            sante_pb: ["sante_pb"], // Nom du groupe radio pour Problème de santé dans le PDF
+            sante_details: ["Santé", "Santé_es_:sender:", "SANTÉ", "Sante_details", "Santé - précisez"], // Champ texte pour les détails de santé
 
-            // Choix Oui/Non (qui sont des groupes radio dans le PDF original)
-            rss: ["Rss"], // Nom du groupe radio pour RSS dans le PDF
-            sante_pb: ["sante_pb"], // Nom du groupe radio pour Problème de santé dans le PDF
-            sante_details: ["Santé", "Santé_es_:sender:", "SANTÉ", "Sante_details", "Santé - précisez"], // Champ texte pour les détails de santé
+            // Formations (cases à cocher)
+            Cadenassage: ["Cadenassage"],
+            Amiante: ["Amiante","Amiante /silice","Amiante / silice"],
+            EspaceClos: ["Espace clos"],
+            Secourisme: ["Secourisme en milieu de travail"],
+            Nacelle: ["Nacelle"],
+            ProtectionRespiratoire: ["Protection respiratoire","Protection respiratoire Fit Test 2ans"],
+            SIMDUT: ["SIMDUT 2015 obligatoire","SIMDUT"],
+            Plateforme: ["Plateforme élévatrice"],
+            Autres: ["Autres"],
+            
+            // Engagement du travailleur (case à cocher)
+            Engagement: ["Case à cocher24","ENGAGEMENT DU TRAVAILLEUR","Engagement"],
 
-            // Formations (cases à cocher)
-            Cadenassage: ["Cadenassage"],
-            Amiante: ["Amiante","Amiante /silice","Amiante / silice"],
-            EspaceClos: ["Espace clos"],
-            Secourisme: ["Secourisme en milieu de travail"],
-            Nacelle: ["Nacelle"],
-            ProtectionRespiratoire: ["Protection respiratoire","Protection respiratoire Fit Test 2ans"],
-            SIMDUT: ["SIMDUT 2015 obligatoire","SIMDUT"],
-            Plateforme: ["Plateforme élévatrice"],
-            Autres: ["Autres"],
-            
-            // Engagement du travailleur (case à cocher)
-            Engagement: ["Case à cocher24","ENGAGEMENT DU TRAVAILLEUR","Engagement"],
+            // Champs pour le bas du formulaire (seront mis à jour automatiquement via JS)
+            travailleurNomFinal: ["Travailleur  Prénom et Nom en lettres moulées"], 
+            dateFinale: ["Date27_es_:signer:date", "Date"], 
+        };
 
-            // Champs pour le bas du formulaire (seront mis à jour automatiquement via JS)
-            travailleurNomFinal: ["Travailleur  Prénom et Nom en lettres moulées"], 
-            dateFinale: ["Date27_es_:signer:date", "Date"], 
-        };
+        // Charge le modèle PDF à partir de l'URL spécifiée
+        async function loadTemplate() {
+            const url = 'assets/accueil_travailleurs.pdf'; 
+            const buf = await fetch(url).then(r => {
+                if (!r.ok) throw new Error('PDF modèle introuvable à ' + url);
+                return r.arrayBuffer();
+            });
+            return PDFLib.PDFDocument.load(buf);
+        }
 
-        // Charge le modèle PDF à partir de l'URL spécifiée
-        async function loadTemplate() {
-            const url = 'assets/accueil_travailleurs.pdf'; 
-            const buf = await fetch(url).then(r => {
-                if (!r.ok) throw new Error('PDF modèle introuvable à ' + url);
-                return r.arrayBuffer();
-            });
-            return PDFLib.PDFDocument.load(buf);
-        }
+        // Lit les valeurs du formulaire HTML
+        function readFormValues() {
+            const $ = id => document.getElementById(id);
+            const values = {
+                nomProjet: $("NomProjet").value,
+                dateDuJour: $("DateDuJour").value, 
+                metierCCQ: $("MetierCCQ").value,
+                echeanceCCQ: $("EcheanceCCQ").value,
+                nomTravailleur: $("NomTravailleur").value,
+                entreprise: $("Entreprise").value,
+                tel1: $("Telephone").value,
+                // Ligne à retirer : tel2: $("Telephone2").value,
+                tel3: $("Telephone3").value,
+                contactUrgence: $("ContactUrgence").value,
+                rss: $("Rss").value === 'Oui',
+                santePb: $("SantePb").value === 'Oui',
+                santeDetails: $("SanteDetails").value,
+                
+                formations: {
+                    Cadenassage: $("Cadenassage").checked,
+                    Amiante: $("Amiante").checked,
+                    EspaceClos: $("EspaceClos").checked,
+                    Secourisme: $("Secourisme").checked,
+                    Nacelle: $("Nacelle").checked,
+                    ProtectionRespiratoire: $("ProtectionRespiratoire").checked,
+                    SIMDUT: $("SIMDUT").checked,
+                    Plateforme: $("Plateforme").checked,
+                    Autres: $("Autres").checked,
+                },
+                
+                engagement: $("Engagement").checked, 
 
-        // Lit les valeurs du formulaire HTML
-        function readFormValues() {
-            const $ = id => document.getElementById(id);
-            const values = {
-                nomProjet: $("NomProjet").value,
-                dateDuJour: $("DateDuJour").value, 
-                metierCCQ: $("MetierCCQ").value,
-                echeanceCCQ: $("EcheanceCCQ").value,
-                nomTravailleur: $("NomTravailleur").value,
-                entreprise: $("Entreprise").value,
-                tel1: $("Telephone").value,
-                tel2: $("Telephone2").value,
-                tel3: $("Telephone3").value,
-                contactUrgence: $("ContactUrgence").value,
-                rss: $("Rss").value === 'Oui', // Renvoie true/false
-                santePb: $("SantePb").value === 'Oui', // Renvoie true/false
-                santeDetails: $("SanteDetails").value,
-                
-                formations: {
-                    Cadenassage: $("Cadenassage").checked,
-                    Amiante: $("Amiante").checked,
-                    EspaceClos: $("EspaceClos").checked,
-                    Secourisme: $("Secourisme").checked,
-                    Nacelle: $("Nacelle").checked,
-                    ProtectionRespiratoire: $("ProtectionRespiratoire").checked,
-                    SIMDUT: $("SIMDUT").checked,
-                    Plateforme: $("Plateforme").checked,
-                    Autres: $("Autres").checked,
-                },
-                
-                engagement: $("Engagement").checked, 
+                // Valeurs des champs du bas du formulaire (mis à jour par les listeners)
+                travailleurNomFinal: $("TravailleurNomFinal").value,
+                dateFinale: $("DateFinale").value,
+                signatureData: getSignatureData(),
+            };
 
-                // Valeurs des champs du bas du formulaire (mis à jour par les listeners)
-                travailleurNomFinal: $("TravailleurNomFinal").value,
-                dateFinale: $("DateFinale").value,
-                signatureData: getSignatureData(),
-            };
+            localStorage.setItem('lastTravailleurName', values.nomTravailleur);
+            return values;
+        }
 
-            localStorage.setItem('lastTravailleurName', values.nomTravailleur);
-            return values;
-        }
+        // Fonctions pour la signature sur canvas
+        const canvas = document.getElementById('signatureCanvas');
+        const ctx = canvas.getContext('2d');
+        let drawing = false;
 
-        // Fonctions pour la signature sur canvas
-        const canvas = document.getElementById('signatureCanvas');
-        const ctx = canvas.getContext('2d');
-        let drawing = false;
+        function resizeCanvas() {
+            canvas.width = canvas.offsetWidth;
+            canvas.height = 120;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "#f8fafc"; 
+            ctx.fillRect(0, 0, canvas.width, canvas.height); 
+            ctx.strokeStyle = '#000'; 
+            ctx.lineWidth = 2; 
+            ctx.lineCap = 'round'; 
+        }
 
-        function resizeCanvas() {
-            // S'assurer que le canvas prend toute la largeur disponible dans son parent
-            canvas.width = canvas.offsetWidth;
-            canvas.height = 120; // Nouvelle hauteur fixe pour plus d'espace 
-            ctx.clearRect(0, 0, canvas.width, canvas.height); // Efface le contenu du canvas
-            // IMPORTANT : Remplir le fond avec une couleur ici pour le rendre visible sur la page HTML
-            ctx.fillStyle = "#f8fafc"; 
-            ctx.fillRect(0, 0, canvas.width, canvas.height); 
-            ctx.strokeStyle = '#000'; 
-            ctx.lineWidth = 2; 
-            ctx.lineCap = 'round'; 
-        }
+        window.addEventListener('load', resizeCanvas);
+        window.addEventListener('resize', resizeCanvas);
 
-        // Redimensionne le canvas au chargement et lors du redimensionnement de la fenêtre
-        window.addEventListener('load', resizeCanvas);
-        window.addEventListener('resize', resizeCanvas);
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault(); 
+            startDrawing(e.touches[0]);
+        });
+        canvas.addEventListener('touchend', stopDrawing);
+        canvas.addEventListener('touchmove', (e) => {
+            e.preventDefault(); 
+            draw(e.touches[0]);
+        });
 
-        canvas.addEventListener('mousedown', startDrawing);
-        canvas.addEventListener('mouseup', stopDrawing);
-        canvas.addEventListener('mousemove', draw);
-        // Support tactile
-        canvas.addEventListener('touchstart', (e) => {
-            e.preventDefault(); 
-            startDrawing(e.touches[0]);
-        });
-        canvas.addEventListener('touchend', stopDrawing);
-        canvas.addEventListener('touchmove', (e) => {
-            e.preventDefault(); 
-            draw(e.touches[0]);
-        });
+        function startDrawing(e) {
+            drawing = true;
+            ctx.beginPath();
+            const rect = canvas.getBoundingClientRect();
+            const x = (e.clientX || e.pageX) - rect.left;
+            const y = (e.clientY || e.pageY) - rect.top;
+            ctx.moveTo(x, y);
+        }
 
-        function startDrawing(e) {
-            drawing = true;
-            ctx.beginPath();
-            const rect = canvas.getBoundingClientRect();
-            const x = (e.clientX || e.pageX) - rect.left;
-            const y = (e.clientY || e.pageY) - rect.top;
-            ctx.moveTo(x, y);
-        }
+        function draw(e) {
+            if (!drawing) return;
+            const rect = canvas.getBoundingClientRect();
+            const x = (e.clientX || e.pageX) - rect.left;
+            const y = (e.clientY || e.pageY) - rect.top;
+            ctx.lineTo(x, y);
+            ctx.stroke();
+        }
 
-        function draw(e) {
-            if (!drawing) return;
-            const rect = canvas.getBoundingClientRect();
-            const x = (e.clientX || e.pageX) - rect.left;
-            const y = (e.clientY || e.pageY) - rect.top;
-            ctx.lineTo(x, y);
-            ctx.stroke();
-        }
+        function stopDrawing() {
+            drawing = false;
+        }
 
-        function stopDrawing() {
-            drawing = false;
-        }
+        document.getElementById('clearSignature').addEventListener('click', () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "#f8fafc"; 
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        });
 
-        document.getElementById('clearSignature').addEventListener('click', () => {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            // IMPORTANT : Remplir le fond avec une couleur ici pour le rendre visible sur la page HTML
-            ctx.fillStyle = "#f8fafc"; 
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-        });
+        // Fonction pour récupérer les données de la signature (image)
+        function getSignatureData() {
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            let hasContent = false;
+            const bgColor = {r: 248, g: 250, b: 252};
+            for (let i = 0; i < imageData.data.length; i += 4) {
+                if (imageData.data[i + 3] > 0 && 
+                    !(imageData.data[i] === bgColor.r && imageData.data[i+1] === bgColor.g && imageData.data[i+2] === bgColor.b)) {
+                    hasContent = true;
+                    break;
+                }
+            }
+            if (hasContent) {
+                return canvas.toDataURL('image/png');
+            }
+            return null; 
+        }
 
-        // Fonction pour récupérer les données de la signature (image)
-        function getSignatureData() {
-            // Vérifie si le canvas a été dessiné (non vide) en regardant si des pixels non-transparent ont été dessinés.
-            // On ne vérifie plus la couleur de fond, car le fond est transparent.
-            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-            let hasContent = false;
-            // On s'assure que le canal alpha est supérieur à 0 (non transparent) ET que les pixels ne sont pas la couleur de fond
-            const bgColor = {r: 248, g: 250, b: 252}; // #f8fafc en RGB
-            for (let i = 0; i < imageData.data.length; i += 4) {
-                if (imageData.data[i + 3] > 0 && 
-                    !(imageData.data[i] === bgColor.r && imageData.data[i+1] === bgColor.g && imageData.data[i+2] === bgColor.b)) {
-                    hasContent = true;
-                    break;
-                }
-            }
-            if (hasContent) {
-                return canvas.toDataURL('image/png');
-            }
-            return null; 
-        }
+        // Pré-remplir la date du jour pour "DateDuJour" et copier dans "DateFinale"
+        window.addEventListener('load', () => {
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            const formattedDate = `${year}-${month}-${day}`;
+            
+            const dateDuJourInput = document.getElementById('DateDuJour');
+            dateDuJourInput.value = formattedDate;
+            dateDuJourInput.dispatchEvent(new Event('input'));
 
-        // Pré-remplir la date du jour pour "DateDuJour" et copier dans "DateFinale"
-        window.addEventListener('load', () => {
-            const today = new Date();
-            const year = today.getFullYear();
-            const month = String(today.getMonth() + 1).padStart(2, '0');
-            const day = String(today.getDate()).padStart(2, '0');
-            const formattedDate = `${year}-${month}-${day}`;
-            
-            const dateDuJourInput = document.getElementById('DateDuJour');
-            dateDuJourInput.value = formattedDate;
-            dateDuJourInput.dispatchEvent(new Event('input')); // Déclenche l'événement pour copier la date
+            resizeCanvas(); 
 
-            resizeCanvas(); 
+            const nomTravailleurInput = document.getElementById('NomTravailleur');
+            const lastTravailleurName = localStorage.getItem('lastTravailleurName');
+            if (lastTravailleurName) {
+                nomTravailleurInput.value = lastTravailleurName;
+                nomTravailleurInput.dispatchEvent(new Event('input'));
+            }
+        });
 
-            // Tente de pré-remplir le nom du travailleur si sauvegardé
-            const nomTravailleurInput = document.getElementById('NomTravailleur');
-            const lastTravailleurName = localStorage.getItem('lastTravailleurName');
-            if (lastTravailleurName) {
-                nomTravailleurInput.value = lastTravailleurName;
-                nomTravailleurInput.dispatchEvent(new Event('input')); // Déclenche l'événement pour copier le nom
-            }
-        });
+        // Synchronisation automatique des champs
+        document.getElementById('NomTravailleur').addEventListener('input', (event) => {
+            document.getElementById('TravailleurNomFinal').value = event.target.value.toUpperCase();
+        });
 
-        // Synchronisation automatique des champs
-        document.getElementById('NomTravailleur').addEventListener('input', (event) => {
-            // Convertit la valeur en majuscules avant de l'assigner au champ du bas
-            document.getElementById('TravailleurNomFinal').value = event.target.value.toUpperCase();
-        });
+        document.getElementById('DateDuJour').addEventListener('input', (event) => {
+            document.getElementById('DateFinale').value = event.target.value;
+        });
 
-        document.getElementById('DateDuJour').addEventListener('input', (event) => {
-            document.getElementById('DateFinale').value = event.target.value;
-        });
+        // Fonction pour valider les cases à cocher de formation
+        function validateFormations() {
+            const checkboxes = document.querySelectorAll('#formationsCheckboxes input[type="checkbox"]');
+            let isChecked = false;
+            for (const checkbox of checkboxes) {
+                if (checkbox.checked) {
+                    isChecked = true;
+                    break;
+                }
+            }
+            return isChecked;
+        }
 
 
-        // Fonction principale pour construire le PDF
-        async function buildPdf({ flatten = false, preview = false, share = false } = {}) {
-            const v = readFormValues(); 
+        // Fonction principale pour construire le PDF
+        async function buildPdf({ flatten = false, preview = false, share = false } = {}) {
+            const v = readFormValues(); 
 
-            // Vérifie si la signature a été dessinée
-            if (!v.signatureData) {
-                alert("Veuillez dessiner votre signature avant de générer le PDF.");
-                return; 
-            }
-            // Vérifie si le nom du travailleur est rempli en bas
-            if (!v.travailleurNomFinal) {
-                alert("Veuillez remplir le 'Prénom et Nom' en haut du formulaire.");
-                return;
-            }
-            // Vérifie si la date finale est remplie en bas
-            if (!v.dateFinale) {
-                alert("La date du jour n'a pas été renseignée.");
-                return;
-            }
-            // Vérifie la case d'engagement
-            if (!v.engagement) {
-                alert("Veuillez cocher la case d'engagement avant de générer le PDF.");
-                return;
-            }
+            // Validation des champs obligatoires
+            const formElement = document.getElementById('form');
+            if (!formElement.checkValidity()) {
+                alert("Veuillez remplir tous les champs obligatoires marqués d'un astérisque (*).");
+                return;
+            }
+            // Validation spécifique pour la section des formations
+            if (!validateFormations()) {
+                alert("Veuillez sélectionner au moins une formation.");
+                return;
+            }
+            // Validation spécifique pour la signature
+            if (!v.signatureData) {
+                alert("Veuillez dessiner votre signature avant de générer le PDF.");
+                return; 
+            }
 
+            const pdf = await loadTemplate(); 
+            const form = pdf.getForm(); 
+            const pages = pdf.getPages(); 
 
-            const pdf = await loadTemplate(); 
-            const form = pdf.getForm(); 
-            const pages = pdf.getPages(); 
+            try {
+                console.log('Champs détectés dans le PDF →');
+                for (const f of form.getFields()) {
+                    console.log('-', f.getName());
+                }
+            } catch(e) {
+                console.error("Erreur lors de la lecture des champs PDF:", e);
+            }
 
-            // Debug : Affiche la liste des noms de champs détectés dans le PDF (pour débugger le mapping)
-            try {
-                console.log('Champs détectés dans le PDF →');
-                for (const f of form.getFields()) {
-                    console.log('-', f.getName());
-                }
-            } catch(e) {
-                console.error("Erreur lors de la lecture des champs PDF:", e);
-            }
+            // Remplissage des champs de texte
+            setText(form, map.nomProjet, v.nomProjet);
+            const dateDuJourValue = v.dateDuJour ? new Date(v.dateDuJour + 'T12:00:00') : null;
+            const dateDuJourStr = dateDuJourValue ? `${String(dateDuJourValue.getDate()).padStart(2,'0')}/${String(dateDuJourValue.getMonth()+1).padStart(2,'0')}/${dateDuJourValue.getFullYear()}` : '';
+            setText(form, map.dateDuJour, dateDuJourStr); 
+            setText(form, map.metierCCQ, v.metierCCQ);
+            const d = v.echeanceCCQ ? new Date(v.echeanceCCQ + 'T12:00:00') : null;
+            const dStr = d ? `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}` : '';
+            setText(form, map.echeanceCCQ, dStr);
+            setText(form, map.nomTravailleur, v.nomTravailleur);
+            setText(form, map.entreprise, v.entreprise);
+            setText(form, map.tel1, v.tel1);
+            setText(form, map.tel3, v.tel3);
+            setText(form, map.contactUrgence, v.contactUrgence);
 
-            // Remplissage des champs de texte
-            setText(form, map.nomProjet, v.nomProjet);
-            // Conversion de la date (YYYY-MM-DD en DD/MM/YYYY) pour le champ Date du jour en haut
-            const dateDuJourValue = v.dateDuJour ? new Date(v.dateDuJour + 'T12:00:00') : null;
-            const dateDuJourStr = dateDuJourValue ? `${String(dateDuJourValue.getDate()).padStart(2,'0')}/${String(dateDuJourValue.getMonth()+1).padStart(2,'0')}/${dateDuJourValue.getFullYear()}` : '';
-            setText(form, map.dateDuJour, dateDuJourStr); 
+            // Remplissage des sélecteurs Oui/Non (qui sont des groupes radio dans le PDF)
+            setRadio(form, map.rss, v.rss ? 'Oui' : 'Non');
+            setRadio(form, map.sante_pb, v.santePb ? 'Oui' : 'Non');
+            setText(form, map.sante_details, v.santeDetails);
 
-            setText(form, map.metierCCQ, v.metierCCQ);
-            
-            // Conversion de la date (YYYY-MM-DD en DD/MM/YYYY)
-            const d = v.echeanceCCQ ? new Date(v.echeanceCCQ + 'T12:00:00') : null;
-            const dStr = d ? `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}` : '';
-            setText(form, map.echeanceCCQ, dStr);
+            // Remplissage des cases à cocher pour les formations
+            for (const key of Object.keys(v.formations)) {
+                setCheck(form, map[key] || [key], !!v.formations[key]);
+            }
+            
+            // Remplissage de la case à cocher d'engagement
+            setCheck(form, map.Engagement, v.engagement);
 
-            setText(form, map.nomTravailleur, v.nomTravailleur);
-            setText(form, map.entreprise, v.entreprise);
-            setText(form, map.tel1, v.tel1);
-            setText(form, map.tel2, v.tel2);
-            setText(form, map.tel3, v.tel3);
-            setText(form, map.contactUrgence, v.contactUrgence);
+            // Remplissage des champs du bas
+            setText(form, map.travailleurNomFinal, v.travailleurNomFinal);
+            const dateFinaleValue = v.dateFinale ? new Date(v.dateFinale + 'T12:00:00') : null;
+            const dateFinaleStr = dateFinaleValue ? `${String(dateFinaleValue.getDate()).padStart(2,'0')}/${String(dateFinaleValue.getMonth()+1).padStart(2,'0')}/${dateFinaleValue.getFullYear()}` : '';
+            setText(form, map.dateFinale, dateFinaleStr); 
 
-            // Remplissage des sélecteurs Oui/Non (qui sont des groupes radio dans le PDF)
-            // Utilisez la fonction setRadio pour les champs de type radio
-            setRadio(form, map.rss, v.rss ? 'Oui' : 'Non'); // La valeur 'Oui' ou 'Non' sera l'export value du bouton radio
-            setRadio(form, map.sante_pb, v.santePb ? 'Oui' : 'Non'); // La valeur 'Oui' ou 'Non' sera l'export value du bouton radio
-            setText(form, map.sante_details, v.santeDetails);
+            // GESTION DE LA SIGNATURE DESSINÉE
+            try {
+                const signatureImage = await pdf.embedPng(v.signatureData);
+                const lastPage = pages[pages.length - 1];
+                
+                // Coordonnées de la signature (en points)
+                const signatureX = 85 * 2.835;
+                const signatureY = 39 * 2.835;
 
-            // Remplissage des cases à cocher pour les formations
-            for (const key of Object.keys(v.formations)) {
-                setCheck(form, map[key] || [key], !!v.formations[key]);
-            }
-            
-            // Remplissage de la case à cocher d'engagement
-            setCheck(form, map.Engagement, v.engagement);
+                const scaleFactor = 1.05;
+                const baseWidth = 130;
+                const signatureWidth = baseWidth * scaleFactor;
+                const signatureHeight = (signatureImage.height * signatureWidth) / signatureImage.width; 
 
-            // Remplissage des champs du bas
-            setText(form, map.travailleurNomFinal, v.travailleurNomFinal);
-            
-            // Remplissage de la date finale avec la valeur du champ du haut
-            const dateFinaleValue = v.dateFinale ? new Date(v.dateFinale + 'T12:00:00') : null;
-            const dateFinaleStr = dateFinaleValue ? `${String(dateFinaleValue.getDate()).padStart(2,'0')}/${String(dateFinaleValue.getMonth()+1).padStart(2,'0')}/${dateFinaleValue.getFullYear()}` : '';
-            setText(form, map.dateFinale, dateFinaleStr);
+                lastPage.drawImage(signatureImage, {
+                    x: signatureX,
+                    y: signatureY, 
+                    width: signatureWidth,
+                    height: signatureHeight,
+                });
+            } catch (error) {
+                console.error("Erreur lors de l'intégration de la signature :", error);
+                alert("La signature n'a pas pu être intégrée au PDF. Veuillez réessayer ou contacter l'administrateur.");
+            }
 
-            // GESTION DE LA SIGNATURE DESSINÉE
-            try {
-                const signatureImage = await pdf.embedPng(v.signatureData);
-                const lastPage = pages[pages.length - 1];
-                
-                // Coordonnées de la signature (en points)
-                const signatureX = 85 * 2.835; // 75 mm du bord gauche
-                const signatureY = 39 * 2.835; // 38 mm du bas de la feuille
+            // Si "flatten" est vrai, les champs du formulaire sont fusionnés avec le document
+            if (flatten) form.flatten();
 
-                const scaleFactor = 1.05; // 5% plus grand
-                const baseWidth = 130; // Ajustez cette valeur pour contrôler la largeur de base de la signature
+            const bytes = await pdf.save(); 
+            const filename = `Formulaire_PRD_${v.nomTravailleur.replace(/\s+/g, '_') || 'sans_nom'}_${Date.now()}.pdf`;
+            const file = new File([bytes], filename, { type:'application/pdf' });
 
-                const signatureWidth = baseWidth * scaleFactor;
-                const signatureHeight = (signatureImage.height * signatureWidth) / signatureImage.width; 
+            // Téléchargement ou aperçu
+            if (preview) {
+                const blobUrl = URL.createObjectURL(file);
+                window.open(blobUrl, '_blank');
+            } else if (share && navigator.share) {
+                try {
+                    await navigator.share({
+                        title: filename,
+                        files: [file],
+                    });
+                } catch (error) {
+                    console.error('Erreur de partage:', error);
+                    alert('Le partage a échoué. Assurez-vous que votre appareil prend en charge le partage de fichiers.');
+                }
+            } else {
+                const url = URL.createObjectURL(file);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
+        }
 
-                lastPage.drawImage(signatureImage, {
-                    x: signatureX,
-                    y: signatureY, 
-                    width: signatureWidth,
-                    height: signatureHeight,
-                });
-            } catch (error) {
-                console.error("Erreur lors de l'intégration de la signature :", error);
-                alert("La signature n'a pas pu être intégrée au PDF. Veuillez réessayer ou contacter l'administrateur.");
-            }
-
-            // Si "flatten" est vrai, les champs du formulaire sont fusionnés avec le document
-            if (flatten) form.flatten();
-
-            const bytes = await pdf.save(); 
-            const filename = `Formulaire_PRD_${v.nomTravailleur.replace(/\s+/g, '_') || 'sans_nom'}_${Date.now()}.pdf`;
-            const file = new File([bytes], filename, { type:'application/pdf' });
-
-            // Téléchargement ou aperçu
-            if (preview) {
-                const blobUrl = URL.createObjectURL(file);
-                window.open(blobUrl, '_blank');
-            } else if (share && navigator.share) {
-                try {
-                    await navigator.share({
-                        title: filename,
-                        files: [file],
-                    });
-                } catch (error) {
-                    console.error('Erreur de partage:', error);
-                    alert('Le partage a échoué. Assurez-vous que votre appareil prend en charge le partage de fichiers.');
-                }
-            } else {
-                const url = URL.createObjectURL(file);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = filename;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-            }
-        }
-
-        // Ajout des écouteurs d'événements aux boutons
-        document.getElementById('btnGen').addEventListener('click', () => buildPdf({ flatten: false }));
-        document.getElementById('btnGenFlatten').addEventListener('click', () => buildPdf({ flatten: true }));
-        document.getElementById('btnPreview').addEventListener('click', () => buildPdf({ preview: true }));
-        document.getElementById('btnShare').addEventListener('click', () => buildPdf({ share: true }));
-    </script>
+        // Ajout des écouteurs d'événements aux boutons
+        document.getElementById('btnGen').addEventListener('click', () => buildPdf({ flatten: false }));
+        document.getElementById('btnGenFlatten').addEventListener('click', () => buildPdf({ flatten: true }));
+        document.getElementById('btnPreview').addEventListener('click', () => buildPdf({ preview: true }));
+        document.getElementById('btnShare').addEventListener('click', () => buildPdf({ share: true }));
+    </script>
 </body>
 </html>
-
