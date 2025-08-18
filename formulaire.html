@@ -643,15 +643,19 @@
                 // Coordonnées de la signature (en points)
                 const signatureX = 85 * 2.835;
                 const signatureY = 39 * 2.835;
+                
+                // Redimensionnement de la signature pour s'adapter au PDF
+                const maxWidth = 130 * 2.835; // Convertir en points, par exemple 130px
+                const maxHeight = 50 * 2.835;  // Hauteur maximale pour éviter les débordements
 
-                const scaleFactor = 1.05;
-                const baseWidth = 130;
-                const signatureWidth = baseWidth * scaleFactor;
-                const signatureHeight = (signatureImage.height * signatureWidth) / signatureImage.width; 
+               // Calculer le rapport d'aspect pour le redimensionnement
+                const ratio = Math.min(maxWidth / signatureImage.width, maxHeight / signatureImage.height);
+                const signatureWidth = signatureImage.width * ratio;
+                const signatureHeight = signatureImage.height * ratio;
 
                 lastPage.drawImage(signatureImage, {
                     x: signatureX,
-                    y: signatureY, 
+                    y: signatureY,
                     width: signatureWidth,
                     height: signatureHeight,
                 });
