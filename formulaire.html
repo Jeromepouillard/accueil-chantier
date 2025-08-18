@@ -582,6 +582,11 @@
                 alert("Veuillez dessiner votre signature avant de générer le PDF.");
                 return; 
             }
+            // Vérifie si le nom du travailleur est rempli en bas
+            if (!v.travailleurNomFinal) {
+                alert("Veuillez remplir le 'Prénom et Nom' en haut du formulaire.");
+                return;
+            }
 
             const pdf = await loadTemplate(); 
             const form = pdf.getForm(); 
