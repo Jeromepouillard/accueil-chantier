@@ -641,28 +641,29 @@
             setText(form, map.dateFinale, dateFinaleStr); 
 
             // GESTION DE LA SIGNATURE DESSINÉE
-           try {
-                const signatureImage = await pdf.embedPng(v.signatureData);
-                const lastPage = pages[pages.length - 1];
-                // Coordonnées de la signature (en points)
-                const signatureX = 85 * 2.835;
-                const signatureY = 39 * 2.835;
-               
-                const scaleFactor = 1.05;
-                const baseWidth = 130;
-                const signatureWidth = baseWidth * scaleFactor;
-                const signatureHeight = (signatureImage.height * signatureWidth) / signatureImage.width; 
+          
+            try {
+                const signatureImage = await pdf.embedPng(v.signatureData);
+                const lastPage = pages[pages.length - 1];
 
-                lastPage.drawImage(signatureImage, {
-                    x: signatureX,
-                    y: signatureY, 
-                    width: signatureWidth,
-                    height: signatureHeight,
-                });
-            } catch (error) {
-                console.error("Erreur lors de l'intégration de la signature :", error);
-                alert("La signature n'a pas pu être intégrée au PDF. Veuillez réessayer ou contacter l'administrateur.");
-            }
+                // Coordonnées de la signature (en points)
+                const signatureX = 82 * 2.835;
+                const signatureY = 39 * 2.835;
+
+                // Calcul de la hauteur et de la largeur selon les nouvelles instructions
+                const newSignatureHeight = signatureImage.height / 2;
+                const newSignatureWidth = signatureImage.width * 1.2;
+
+                lastPage.drawImage(signatureImage, {
+                    x: signatureX,
+                    y: signatureY,
+                    width: newSignatureWidth,
+                    height: newSignatureHeight,
+                });
+            } catch (error) {
+                console.error("Erreur lors de l'intégration de la signature :", error);
+                alert("La signature n'a pas pu être intégrée au PDF. Veuillez réessayer ou contacter l'administrateur.");
+            }
 
             // Si "flatten" est vrai, les champs du formulaire sont fusionnés avec le document
             if (flatten) form.flatten();
