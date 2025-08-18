@@ -627,6 +627,8 @@
             setText(form, map.nomProjet, v.nomProjet);
             // Conversion de la date (YYYY-MM-DD en DD/MM/YYYY) pour le champ Date du jour en haut
             const dateDuJourValue = v.dateDuJour ? new Date(v.dateDuJour) : null;
+            // ON AJOUTE CETTE LIGNE POUR LA CONVERTION +4H00
+            if (dateDuJourValue) { dateDuJourValue.setHours(12); } // Ajuste la date pour éviter le décalage horaire
             const dateDuJourStr = dateDuJourValue ? `${String(dateDuJourValue.getDate()).padStart(2,'0')}/${String(dateDuJourValue.getMonth()+1).padStart(2,'0')}/${dateDuJourValue.getFullYear()}` : '';
             setText(form, map.dateDuJour, dateDuJourStr); 
 
@@ -634,6 +636,8 @@
             
             // Conversion de la date (YYYY-MM-DD en DD/MM/YYYY)
             const d = v.echeanceCCQ ? new Date(v.echeanceCCQ) : null;
+            // DEUXIEME PARTIE DATE +4H00
+            if (d) { d.setHours(12); } // Ajuste la date pour éviter le décalage horaire
             const dStr = d ? `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}` : '';
             setText(form, map.echeanceCCQ, dStr);
 
