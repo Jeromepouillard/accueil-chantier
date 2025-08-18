@@ -520,15 +520,20 @@
         });
 
         function getSignatureData() {
-          // Exporte le bitmap natif (PNG)
-          const dataUrl = canvas.toDataURL('image/png');
+          // Canvas d'export normalisé (ratio fixe)
+          const exportCanvas = document.createElement('canvas');
+          exportCanvas.width = 400;   // largeur fixe
+          exportCanvas.height = 100;  // hauteur fixe
+          const exCtx = exportCanvas.getContext('2d');
         
-          // Option “y a-t-il quelque chose de dessiné ?”
-          // Petit test rapide : regarde s'il y a des pixels non-uniformes (évite un scan complet)
-          // Ici on garde simple : si l’utilisateur a cliqué/drag, on suppose qu’il a signé.
-          // Si tu veux le test “pixel-perfect”, remets ton scan ImageData (mais c’est plus lourd).
+          // Fond identique à l'UI (ou blanc si tu préfères)
+          exCtx.fillStyle = "#f8fafc";
+          exCtx.fillRect(0, 0, exportCanvas.width, exportCanvas.height);
         
-          return dataUrl; // null si tu veux conditionner à un test supplémentaire
+          // On dessine le canvas de signature dedans, en le ré-échantillonnant proprement
+          exCtx.drawImage(canvas, 0, 0, exportCanvas.width, exportCanvas.height);
+        
+          return exportCanvas.toDataURL('image/png');
         }
 
         // Pré-remplir la date du jour pour "DateDuJour" et copier dans "DateFinale"
@@ -654,24 +659,36 @@
               const signatureImage = await pdf.embedPng(v.signatureData);
               const lastPage = pages[pages.length - 1];
             
-              // Position en points PDF (tes mm * 2.835 vont très bien)
+              // Position dans le PDF (en points). Garde tes mm*2.835 si tu veux.
               const signatureX = 82 * 2.835;
               const signatureY = 39 * 2.835;
             
-              // Largeur cible STABLE en points PDF (ajuste à ton champ)
-              const targetWidthPt = 180; // ~ 63 mm
-              const aspect = signatureImage.height / signatureImage.width;
-              const targetHeightPt = targetWidthPt * aspect;
+              // Boîte MAX pour la signature (ajuste à ton champ PDF)
+              const maxWidthPt  = 180; // ≈ 63 mm
+              const maxHeightPt = 60;  // ≈ 21 mm
+            
+              // Dimensions natives de l'image (issues du PNG normalisé 400x100 → ratio 4:1)
+              const imgW = signatureImage.width;
+              const imgH = signatureImage.height;
+              const ratio = imgW / imgH;
+            
+              // Fit dans la boîte max en conservant le ratio
+              let targetW = maxWidthPt;
+              let targetH = targetW / ratio;
+              if (targetH > maxHeightPt) {
+                targetH = maxHeightPt;
+                targetW = targetH * ratio;
+              }
             
               lastPage.drawImage(signatureImage, {
                 x: signatureX,
                 y: signatureY,
-                width: targetWidthPt,
-                height: targetHeightPt,
+                width: targetW,
+                height: targetH,
               });
             } catch (error) {
               console.error("Erreur lors de l'intégration de la signature :", error);
-              alert("La signature n'a pas pu être intégrée au PDF. Veuillez réessayer ou contacter l'administrateur.");
+              alert("La signature n'a pas pu être intégrée au PDF. Réessayez.");
             }
 
             // Si "flatten" est vrai, les champs du formulaire sont fusionnés avec le document
