@@ -445,14 +445,17 @@
         let drawing = false;
 
         function resizeCanvas() {
-            canvas.width = canvas.offsetWidth;
-            canvas.height = 120;
+            const dpr = window.devicePixelRatio || 1;
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+            ctx.scale(dpr, dpr);
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = "#f8fafc"; 
-            ctx.fillRect(0, 0, canvas.width, canvas.height); 
-            ctx.strokeStyle = '#000'; 
-            ctx.lineWidth = 2; 
-            ctx.lineCap = 'round'; 
+            ctx.fillStyle = "#f8fafc";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.strokeStyle = '#000';
+            ctx.lineWidth = 2;
+            ctx.lineCap = 'round';
         }
 
         window.addEventListener('load', resizeCanvas);
@@ -472,19 +475,21 @@
         });
 
         function startDrawing(e) {
+            const dpr = window.devicePixelRatio || 1;
             drawing = true;
             ctx.beginPath();
             const rect = canvas.getBoundingClientRect();
-            const x = (e.clientX || e.pageX) - rect.left;
-            const y = (e.clientY || e.pageY) - rect.top;
+            const x = ((e.clientX || e.pageX) - rect.left) * dpr;
+            const y = ((e.clientY || e.pageY) - rect.top) * dpr;
             ctx.moveTo(x, y);
         }
 
         function draw(e) {
             if (!drawing) return;
+            const dpr = window.devicePixelRatio || 1;
             const rect = canvas.getBoundingClientRect();
-            const x = (e.clientX || e.pageX) - rect.left;
-            const y = (e.clientY || e.pageY) - rect.top;
+            const x = ((e.clientX || e.pageX) - rect.left) * dpr;
+            const y = ((e.clientY || e.pageY) - rect.top) * dpr;
             ctx.lineTo(x, y);
             ctx.stroke();
         }
@@ -636,37 +641,31 @@
             setText(form, map.dateFinale, dateFinaleStr); 
 
             // GESTION DE LA SIGNATURE DESSINÉE
-            try {
-                const signatureImage = await pdf.embedPng(v.signatureData);
-                const lastPage = pages[pages.length - 1];
-                
-                // Coordonnées de la signature (en points)
-                const signatureX = 85 * 2.835;
-                const signatureY = 39 * 2.835;
-                
-                // Redimensionnement de la signature pour s'adapter au PDF
-                const maxWidth = 130 * 2.835; // Convertir en points, par exemple 130px
-                const maxHeight = 50 * 2.835;  // Hauteur maximale pour éviter les débordements
+           try {
+                const signatureImage = await pdf.embedPng(v.signatureData);
+                const lastPage = pages[pages.length - 1];
+                // Coordonnées de la signature (en points)
+                const signatureX = 85 * 2.835;
+                const signatureY = 39 * 2.835;
+               
+                const scaleFactor = 1.05;
+                const baseWidth = 130;
+                const signatureWidth = baseWidth * scaleFactor;
+                const signatureHeight = (signatureImage.height * signatureWidth) / signatureImage.width; 
 
-               // Calculer le rapport d'aspect pour le redimensionnement
-                const ratio = Math.min(maxWidth / signatureImage.width, maxHeight / signatureImage.height);
-                const signatureWidth = signatureImage.width * ratio;
-                const signatureHeight = signatureImage.height * ratio;
-
-                lastPage.drawImage(signatureImage, {
-                    x: signatureX,
-                    y: signatureY,
-                    width: signatureWidth,
-                    height: signatureHeight,
-                });
-            } catch (error) {
-                console.error("Erreur lors de l'intégration de la signature :", error);
-                alert("La signature n'a pas pu être intégrée au PDF. Veuillez réessayer ou contacter l'administrateur.");
-            }
+                lastPage.drawImage(signatureImage, {
+                    x: signatureX,
+                    y: signatureY, 
+                    width: signatureWidth,
+                    height: signatureHeight,
+                });
+            } catch (error) {
+                console.error("Erreur lors de l'intégration de la signature :", error);
+                alert("La signature n'a pas pu être intégrée au PDF. Veuillez réessayer ou contacter l'administrateur.");
+            }
 
             // Si "flatten" est vrai, les champs du formulaire sont fusionnés avec le document
             if (flatten) form.flatten();
-
             const bytes = await pdf.save(); 
             const filename = `Formulaire_PRD_${v.nomTravailleur.replace(/\s+/g, '_') || 'sans_nom'}_${Date.now()}.pdf`;
             const file = new File([bytes], filename, { type:'application/pdf' });
