@@ -18,7 +18,7 @@ export default async function handler(req, res) {
 
   try {
     const {
-      to = "jpouillard@ateliermmr.com",
+      to = "jerome.pouillard74@gmail.com",
       subject = "Formulaire P+R – PDF",
       html = "<p>Veuillez trouver le PDF en pièce jointe.</p>",
       filename = "formulaire.pdf",
