@@ -828,9 +828,11 @@
               body: JSON.stringify({
                 to: 'jerome.pouillard74@gmail.com', 
                 subject: 'Accueil Chantier – Formulaire PDF',
-                html: '<p>Veuillez trouver le PDF en pièce jointe.</p>',
+                html: `<p><strong>${chantier}</strong> : nouvelle entrée soumise.</p>
+                       <p>Veuillez trouver le PDF en pièce jointe.</p>`,
                 filename,
                 pdfBase64: base64
+                chantier // on l’envoie aussi pour que l’API le connaisse
               })
             });
         
