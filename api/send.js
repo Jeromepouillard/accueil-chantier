@@ -1,3 +1,8 @@
+import { Resend } from "resend";
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+
+
 async function parseBody(req) {
   const chunks = [];
   for await (const chunk of req) {
