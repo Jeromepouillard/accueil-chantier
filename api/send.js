@@ -1,34 +1,31 @@
 import { Resend } from "resend";
+
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-
-
-async function parseBody(req) {
-  const chunks = [];
-  for await (const chunk of req) {
-    chunks.push(chunk);
-  }
-  return JSON.parse(Buffer.concat(chunks).toString());
-}
-
 export default async function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ ok: false, error: "Method Not Allowed" });
-  }
+  // Le code de la nouvelle fonction qui utilise la librairie `resend`
+  console.log("Resend key loaded:", !!process.env.RESEND_API_KEY);
 
   try {
-    const { 
-      to = "jerome.pouillard74@gmail.com",
-      subject = "Formulaire P+R – TEST sans PDF",
-      html = "<p>Voici un test sans pièce jointe 🚀</p>",
-      from = "onboarding@resend.dev"
-    } = await parseBody(req);
+    const data = await resend.emails.send({
+      from: "onboarding@resend.dev",
+      to: "jerome.pouillard74@gmail.com",
+      subject: "Test Resend",
+      html: "<p>Yes! 🎉 L'API marche</p>",
+    });
 
-    await resend.emails.send({ from, to, subject, html });
-
-    return res.status(200).json({ ok: true, message: "Email envoyé (sans PDF)" });
+    console.log("Email sent response:", data);
+    res.status(200).json(data);
   } catch (error) {
-    console.error("Erreur envoi:", error);
-    return res.status(400).json({ ok: false, details: error });
+    console.error("Resend error:", error);
+    res.status(400).json(error);
   }
+}
+
+// Le petit helper qui reste
+async function readJson(req) {
+  const chunks = [];
+  for await (const c of req) chunks.push(c);
+  const raw = Buffer.concat(chunks).toString('utf8');
+  return raw ? JSON.parse(raw) : {};
 }
