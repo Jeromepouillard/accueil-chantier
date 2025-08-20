@@ -58,6 +58,29 @@ export default async function handler(req, res) {
     return res.status(500).json({ ok: false, error: err?.message || String(err) });
   }
 }
+import { Resend } from "resend";
+
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+export default async function handler(req, res) {
+  console.log("Resend key loaded:", !!process.env.RESEND_API_KEY);
+
+  try {
+    const data = await resend.emails.send({
+      from: "onboarding@resend.dev",   // ⚠️ provisoirement on garde cette adresse test
+      to: "jerome.pouillard74@gmail.com",  // test avec ton mail
+      subject: "Test Resend",
+      html: "<p>Yes! 🎉 L'API marche</p>",
+    });
+
+    console.log("Email sent response:", data);
+    res.status(200).json(data);
+  } catch (error) {
+    console.error("Resend error:", error);
+    res.status(400).json(error);
+  }
+}
+
 
 // Petit helper pour lire le JSON proprement
 async function readJson(req) {
