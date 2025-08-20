@@ -12,6 +12,7 @@ document.getElementById('chantier-form').addEventListener('submit', function(e) 
     const imgHeight = canvas.height * imgWidth / canvas.width;
     doc.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
 
+    // Votre code est ici pour obtenir les données du PDF
     const pdfBase64 = doc.output('datauristring').split(',')[1];
     const to = 'jpouillard@ateliermmr.com';
     const subject = 'Formulaire P+R – PDF';
@@ -22,9 +23,9 @@ document.getElementById('chantier-form').addEventListener('submit', function(e) 
     fetch('/api/send', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json' // <== Ceci est crucial
       },
-      body: JSON.stringify({
+      body: JSON.stringify({ // <== Convertit les données en JSON
         to,
         subject,
         html,
