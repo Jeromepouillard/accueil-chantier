@@ -521,20 +521,21 @@
         });
 
         function getSignatureData() {
-          // Canvas d'export normalisé (ratio fixe)
+          // Canvas d'export plus petit
           const exportCanvas = document.createElement('canvas');
-          exportCanvas.width = 400;   // largeur fixe
-          exportCanvas.height = 100;  // hauteur fixe
+          exportCanvas.width = 300;   // au lieu de 400
+          exportCanvas.height = 75;   // au lieu de 100
           const exCtx = exportCanvas.getContext('2d');
         
-          // Fond identique à l'UI (ou blanc si tu préfères)
-          exCtx.fillStyle = "#f8fafc";
+          // Fond BLANC (meilleure compression JPEG)
+          exCtx.fillStyle = "#ffffff";
           exCtx.fillRect(0, 0, exportCanvas.width, exportCanvas.height);
         
-          // On dessine le canvas de signature dedans, en le ré-échantillonnant proprement
+          // Ré-échantillonne la signature
           exCtx.drawImage(canvas, 0, 0, exportCanvas.width, exportCanvas.height);
         
-          return exportCanvas.toDataURL('image/png');
+          // JPEG qualité 0.6 (réglable 0.5–0.8)
+          return exportCanvas.toDataURL('image/jpeg', 0.6);
         }
 
         // Pré-remplir la date du jour pour "DateDuJour" et copier dans "DateFinale"
@@ -665,7 +666,7 @@
 
             // GESTION DE LA SIGNATURE DESSINÉE
             try {
-              const signatureImage = await pdf.embedPng(v.signatureData);
+              const signatureImage = await pdf.embedJpg(v.signatureData);
               const lastPage = pages[pages.length - 1];
             
               // Position dans le PDF (en points). Garde tes mm*2.835 si tu veux.
@@ -776,7 +777,7 @@
         
           // ——— Signature (fit dans 58 x 8 mm) ———
           try {
-            const signatureImage = await pdf.embedPng(v.signatureData);
+            const signatureImage = await pdf.embedJpg(v.signatureData);
             const lastPage = pages[pages.length - 1];
         
             const signatureX = 82 * 2.835;
