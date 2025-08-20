@@ -295,6 +295,7 @@
                 <button id="btnGenFlatten">Générer (aplati pour impression)</button>
                 <button id="btnPreview">Prévisualiser dans le navigateur</button>
                 <button id="btnShare">Partager (mobile)</button>
+                <button id="btnEmail">Envoyer par courriel (PDF en PJ)</button>
             </div>
             <small class="muted">
                 Si vous ne pouvez pas remplir le formulaire en pligne, veuillez en demander un papier au surintendant, merci.
@@ -579,7 +580,15 @@
             }
             return isChecked;
         }
-
+        function arrayBufferToBase64(buffer) {
+          let binary = '';
+          const bytes = new Uint8Array(buffer);
+          const chunk = 0x8000; // morceaux pour éviter les gros call stacks
+          for (let i = 0; i < bytes.length; i += chunk) {
+            binary += String.fromCharCode.apply(null, bytes.subarray(i, i + chunk));
+          }
+          return btoa(binary);
+        }
 
         // Fonction principale pour construire le PDF
         async function buildPdf({ flatten = false, preview = false, share = false } = {}) {
@@ -722,6 +731,121 @@
                 URL.revokeObjectURL(url);
             }
         }
+        async function generatePdfBytesForEmail() {
+          const v = readFormValues();
+        
+          // mêmes validations que buildPdf
+          const formElement = document.getElementById('form');
+          if (!formElement.checkValidity()) throw new Error("Veuillez remplir tous les champs obligatoires marqués d'un astérisque (*).");
+          if (!validateFormations()) throw new Error("Veuillez sélectionner au moins une formation.");
+          if (!v.signatureData) throw new Error("Veuillez dessiner votre signature avant de générer le PDF.");
+          if (!v.travailleurNomFinal) throw new Error("Veuillez remplir le 'Prénom et Nom' en haut du formulaire.");
+        
+          const pdf = await loadTemplate();
+          const form = pdf.getForm();
+          const pages = pdf.getPages();
+        
+          // ——— Remplissages identiques à buildPdf ———
+          setText(form, map.nomProjet, v.nomProjet);
+          const dateDuJourValue = v.dateDuJour ? new Date(v.dateDuJour + 'T12:00:00') : null;
+          const dateDuJourStr = dateDuJourValue ? `${String(dateDuJourValue.getDate()).padStart(2,'0')}/${String(dateDuJourValue.getMonth()+1).padStart(2,'0')}/${dateDuJourValue.getFullYear()}` : '';
+          setText(form, map.dateDuJour, dateDuJourStr); 
+          setText(form, map.metierCCQ, v.metierCCQ);
+          const d = v.echeanceCCQ ? new Date(v.echeanceCCQ + 'T12:00:00') : null;
+          const dStr = d ? `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}` : '';
+          setText(form, map.echeanceCCQ, dStr);
+          setText(form, map.nomTravailleur, v.nomTravailleur);
+          setText(form, map.entreprise, v.entreprise);
+          setText(form, map.tel1, v.tel1);
+          setText(form, map.tel3, v.tel3);
+          setText(form, map.contactUrgence, v.contactUrgence);
+        
+          setRadio(form, map.rss, v.rss ? 'Oui' : 'Non');
+          setRadio(form, map.sante_pb, v.santePb ? 'Oui' : 'Non');
+          setText(form, map.sante_details, v.santeDetails);
+        
+          for (const key of Object.keys(v.formations)) {
+            setCheck(form, map[key] || [key], !!v.formations[key]);
+          }
+          setCheck(form, map.Engagement, v.engagement);
+        
+          setText(form, map.travailleurNomFinal, v.travailleurNomFinal);
+          const dateFinaleValue = v.dateFinale ? new Date(v.dateFinale + 'T12:00:00') : null;
+          const dateFinaleStr = dateFinaleValue ? `${String(dateFinaleValue.getDate()).padStart(2,'0')}/${String(dateFinaleValue.getMonth()+1).padStart(2,'0')}/${dateFinaleValue.getFullYear()}` : '';
+          setText(form, map.dateFinale, dateFinaleStr);
+        
+          // ——— Signature (fit dans 58 x 8 mm) ———
+          try {
+            const signatureImage = await pdf.embedPng(v.signatureData);
+            const lastPage = pages[pages.length - 1];
+        
+            const signatureX = 82 * 2.835;
+            const signatureY = 39 * 2.835;
+        
+            const maxWidthPt  = 164.4; // 58 mm
+            const maxHeightPt = 22.7;  // 8 mm  (pas 21)
+        
+            const imgW = signatureImage.width;
+            const imgH = signatureImage.height;
+            const ratio = imgW / imgH;
+        
+            let targetW = maxWidthPt;
+            let targetH = targetW / ratio;
+            if (targetH > maxHeightPt) {
+              targetH = maxHeightPt;
+              targetW = targetH * ratio;
+            }
+        
+            lastPage.drawImage(signatureImage, {
+              x: signatureX,
+              y: signatureY,
+              width: targetW,
+              height: targetH,
+            });
+          } catch (e) {
+            throw new Error("La signature n'a pas pu être intégrée au PDF.");
+          }
+        
+          // Optionnel : figer les champs pour l'email
+          // form.flatten();
+        
+          const bytes = await pdf.save(); // Uint8Array
+          const base64 = arrayBufferToBase64(bytes);
+          const safeName = (v.nomTravailleur || 'sans_nom').replace(/\s+/g, '_');
+          const filename = `Formulaire_PRD_${safeName}.pdf`;
+        
+          return { base64, filename };
+        }
+
+        document.getElementById('btnEmail')?.addEventListener('click', async () => {
+          try {
+            const { base64, filename } = await generatePdfBytesForEmail();
+        
+            const r = await fetch('/api/send', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                to: 'jpouillard@ateliermmr.com',
+                subject: 'Accueil Chantier – Formulaire PDF',
+                html: '<p>Veuillez trouver le PDF en pièce jointe.</p>',
+                filename,
+                pdfBase64: base64
+              })
+            });
+        
+            const data = await r.json();
+            if (!r.ok || !data.ok) {
+              console.error('Échec envoi:', data);
+              alert('❌ Envoi échoué. Regarde la console et les logs Vercel/Resend.');
+              return;
+            }
+            alert('✅ PDF envoyé par courriel !');
+          } catch (err) {
+            console.error(err);
+            alert('❌ ' + (err?.message || err));
+          }
+        });
+    
 
         // Ajout des écouteurs d'événements aux boutons
         document.getElementById('btnGen').addEventListener('click', () => buildPdf({ flatten: false }));
