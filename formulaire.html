@@ -292,10 +292,6 @@
 
             <div class="btns">
                 <button class="primary" id="btnGen">Générer le PDF (éditable)</button>
-                <button id="btnGenFlatten">Générer (aplati pour impression)</button>
-                <button id="btnPreview">Prévisualiser dans le navigateur</button>
-                <button id="btnShare">Partager (mobile)</button>
-                <button id="btnEmail">Envoyer par courriel (PDF en PJ)</button>
             </div>
             <small class="muted">
                 Si vous ne pouvez pas remplir le formulaire en pligne, veuillez en demander un papier au surintendant, merci.
@@ -852,12 +848,6 @@
           }
         });
 
-
-        // Ajout des écouteurs d'événements aux boutons
-        document.getElementById('btnGen').addEventListener('click', () => buildPdf({ flatten: false }));
-        document.getElementById('btnGenFlatten').addEventListener('click', () => buildPdf({ flatten: true }));
-        document.getElementById('btnPreview').addEventListener('click', () => buildPdf({ preview: true }));
-        document.getElementById('btnShare').addEventListener('click', () => buildPdf({ share: true }));
     </script>
 </body>
 </html>
