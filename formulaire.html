@@ -821,7 +821,7 @@
         document.getElementById('btnEmail')?.addEventListener('click', async () => {
           try {
             const { base64, filename } = await generatePdfBytesForEmail();
-            const chantier = document.getElementById('NomProjet').value || 'Chantier inconnu';
+            
               
             const r = await fetch('/api/send', {
               method: 'POST',
@@ -833,7 +833,6 @@
                        <p>Veuillez trouver le PDF en pièce jointe.</p>`,
                 filename,
                 pdfBase64: base64
-                chantier // on l’envoie aussi pour que l’API le connaisse
               })
             });
         
