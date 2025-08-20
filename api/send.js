@@ -15,7 +15,7 @@ export default async function handler(req, res) {
       filename = 'formulaire.pdf',
       pdfBase64, 
       from = 'onboarding@resend.dev' 
-    } = req.body; // <-- Le corps de la requête est maintenant directement dans req.body
+    } = await readJson(req); // <-- Utilisez `readJson(req)` ici
 
     if (!pdfBase64 || typeof pdfBase64 !== 'string') {
       return res.status(400).json({ ok: false, error: 'pdfBase64 requis' });
@@ -42,4 +42,12 @@ export default async function handler(req, res) {
   } catch (err) {
     return res.status(500).json({ ok: false, error: err?.message || String(err) });
   }
+}
+
+// Le petit helper pour lire le JSON proprement
+async function readJson(req) {
+  const chunks = [];
+  for await (const c of req) chunks.push(c);
+  const raw = Buffer.concat(chunks).toString('utf8');
+  return raw ? JSON.parse(raw) : {};
 }
