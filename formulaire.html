@@ -818,21 +818,24 @@
           return { base64, filename };
         }
 
-        document.getElementById('btnEmail')?.addEventListener('click', async () => {
+       document.getElementById('btnEmail')?.addEventListener('click', async () => {
           try {
             const { base64, filename } = await generatePdfBytesForEmail();
-            
-              
+        
+            // Récupération du nom du chantier
+            const chantier = document.getElementById('NomProjet').value || 'Chantier inconnu';
+        
             const r = await fetch('/api/send', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
-                to: 'jerome.pouillard74@gmail.com', 
-                subject: 'Accueil Chantier – Formulaire PDF',
-                html: `<p><strong>${chantier}</strong> : nouvelle entrée soumise.</p>
+                to: 'jerome.pouillard74@gmail.com', // ← mets ton Gmail ici pour sandbox
+                subject: `Formulaire P+R – ${chantier}`, // objet dynamique
+                html: `<p><strong>${chantier}</strong> : nouvelle entrée.</p>
                        <p>Veuillez trouver le PDF en pièce jointe.</p>`,
                 filename,
-                pdfBase64: base64
+                pdfBase64: base64,
+                chantier // on l’envoie aussi au cas où tu veuilles l’utiliser côté API
               })
             });
         
@@ -848,7 +851,7 @@
             alert('❌ ' + (err?.message || err));
           }
         });
-    
+
 
         // Ajout des écouteurs d'événements aux boutons
         document.getElementById('btnGen').addEventListener('click', () => buildPdf({ flatten: false }));
