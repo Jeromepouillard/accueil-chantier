@@ -12,12 +12,37 @@ document.getElementById('chantier-form').addEventListener('submit', function(e) 
     const imgHeight = canvas.height * imgWidth / canvas.width;
     doc.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
 
-    const pdfData = doc.output('datauristring');
-    const to = 'votre.email@exemple.com'; // Changez cette adresse
-    const subject = 'Formulaire d\'accueil de chantier - ' + document.getElementById('nomPrenom').value;
-    const body = 'Bonjour,\n\nCi-joint le formulaire rempli.\n\nCordialement,';
+    const pdfBase64 = doc.output('datauristring').split(',')[1];
+    const to = 'jpouillard@ateliermmr.com';
+    const subject = 'Formulaire P+R – PDF';
+    const html = '<p>Veuillez trouver le PDF en pièce jointe.</p>';
+    const filename = 'formulaire.pdf';
 
-    // Ouvre le client de messagerie
-    window.location.href = `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}&attachment=${encodeURIComponent(pdfData)}`;
+    // Appel à la fonction Vercel pour envoyer l'email
+    fetch('/api/send', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        to,
+        subject,
+        html,
+        filename,
+        pdfBase64
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.ok) {
+        alert('Courriel envoyé avec succès !');
+      } else {
+        alert('Échec de l\'envoi du courriel : ' + data.error);
+      }
+    })
+    .catch(error => {
+      console.error('Erreur:', error);
+      alert('Une erreur est survenue lors de l\'envoi du courriel.');
+    });
   });
 });
